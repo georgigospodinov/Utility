@@ -11,46 +11,46 @@ public class Logger {
 
     private static final int FLUSH_PERIOD = 5000;//ms
 
-    private static BufferedWriter writer = null;
+    private BufferedWriter writer = null;
 
     /**
      * Used to control the flushing thread.
      *
      * @see Logger#periodicFlush()
      */
-    private static boolean contentsUpdated = false;
+    private boolean contentsUpdated = false;
 
     /**
      * Used to control the flushing thread.
      *
      * @see Logger#periodicFlush()
      */
-    private static boolean running;
+    private boolean running;
 
-    public static void open(String filename) {
-        BufferedWriter temp = null;
-        if (writer != null) {
-            log("Changing logging file to " + filename);
-            temp = writer;
-        }
+    private Logger() {
+    }
+
+    public static Logger open(String filename) {
+        Logger l = new Logger();
+
         try {
-            writer = new BufferedWriter(new FileWriter(filename));
-            if (temp != null) {
-                temp.close();
-            }
-            else {
-                running = true;
-                new Thread(Logger::periodicFlush).start();
-            }
+            l.writer = new BufferedWriter(new FileWriter(filename));
         }
         catch (IOException e) {
             e.printStackTrace();
+            return null;
         }
+
+        l.running = true;
+        new Thread(l::periodicFlush).start();
+
+        return l;
     }
 
-    public static void close() {
+    public void close() {
         try {
             writer.close();
+            contentsUpdated = false;  // Closing causes a flush, so periodicFlush knows not to flush.
             running = false;
         }
         catch (IOException e) {
@@ -58,7 +58,7 @@ public class Logger {
         }
     }
 
-    public static void log(String line) {
+    public void log(String line) {
         try {
             writer.write(line + NEW_LINE);
             contentsUpdated = true;
@@ -68,7 +68,7 @@ public class Logger {
         }
     }
 
-    public static void log(Exception e) {
+    public void log(Exception e) {
         log(e.toString());
         StackTraceElement[] stack = e.getStackTrace();
         for (StackTraceElement element : stack)
@@ -80,7 +80,7 @@ public class Logger {
      * In case the program crashes before the writer was properly closed,
      * there might be some log to read.
      */
-    private static void periodicFlush() {
+    private void periodicFlush() {
         while (running) {
             try {
                 Thread.sleep(FLUSH_PERIOD);
