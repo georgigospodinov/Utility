@@ -14,12 +14,9 @@ class LoggerTest {
     private static final String LINE = "One line";
     private static final String LOG_FILE = "test.log";
 
-    private Logger logger;
-
     @BeforeEach
     void writeLine() {
-        logger = Logger.open(LOG_FILE);
-        if (logger == null) return;
+        Logger logger = new Logger(LOG_FILE);
         logger.log(LINE);
         logger.close();
     }

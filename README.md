@@ -37,12 +37,11 @@ Note that putting the carriage return at the end will cause the progress bar to 
 ### Logger  
 This class lets the user log information to a file.  
 It requires access to the PrintFormatting the class for the purposes of reporting file IO errors and constant definition.  
-Start by calling `Logger logger = Logger.open(String filename)` which returns a new Logger object.  
+Logger objects are created by `Logger logger = new Logger(String filename)`.  
 Subsequent calls to `logger.log(String line)` will write the line to the previously opened file.  
 A new line `\r\n` is attached to the argument.  
 The method `logger.log(Exception e)` logs the exception to the file via calls to the log function above.  
-At end of execution, call `logger.close()` to close the logging file.  
-At any time, the user can call `Logger.open(String filename)` again to start logging to a new file.  
+At end of execution, call `logger.close()` to close the logging file.    
 When a log file is opened, a new [Thread](https://docs.oracle.com/javase/7/docs/api/java/lang/Thread.html "Oracle's Documentation on Java Thread")
  is started that periodically flushes the contents of the log.  
 This function checks if the contents have been updated between activation periods.  

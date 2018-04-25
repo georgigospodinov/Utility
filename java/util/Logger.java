@@ -27,24 +27,16 @@ public class Logger {
      */
     private boolean running;
 
-    private Logger() {
-    }
-
-    public static Logger open(String filename) {
-        Logger l = new Logger();
-
+    public Logger(String filename) {
         try {
-            l.writer = new BufferedWriter(new FileWriter(filename));
+            writer = new BufferedWriter(new FileWriter(filename));
         }
         catch (IOException e) {
             e.printStackTrace();
-            return null;
         }
 
-        l.running = true;
-        new Thread(l::periodicFlush).start();
-
-        return l;
+        running = true;
+        new Thread(this::periodicFlush).start();
     }
 
     public void close() {
