@@ -16,7 +16,7 @@ Finally, it makes typing quicker as there is no need to write the full `System.o
   
 ### ProgressBar  
 This class exposes two methods.  
-```Java
+```java
 public static String formatBar(int workDone, int workTotal)
 public static String formatBar(int workDone, int workTotal, boolean withCarriageReturn)
 ```  
@@ -24,7 +24,7 @@ They can be used to create a progress bar that looks like this `|---------------
 Dashes form the bar, a is the work done, b is the total work to be done.  
 The percentage progress is calculated as `progress = workDone*100.0/workTotal`.  
 The returned String starts with `\r`, so that consecutive printing can replace the previous progress bar.  
-```Java
+```java
 for (int i = 0; i < SUPER_LONG_LOOP; i++) {
     timeConsumingOperation();
     String bar = formatBar(int workDone, int workTotal);
@@ -47,3 +47,15 @@ When a log file is opened, a new [Thread](https://docs.oracle.com/javase/7/docs/
 This function checks if the contents have been updated between activation periods.  
 The period between flushes is 5 seconds (5000ms).  
 Calling `Logger.close()` tells the thread to stop, which will happen at the end of the next period.  
+  
+### Props  
+This class enables reading of properties files.  
+Use `Props.load(String filename)` to load properties from a file called "filename". This can be absolute or relative path.  
+Use `Props.load()` to load properties from the default filename "default.props".  
+The Props class uses a HashMap to store all the loaded properties.  
+Loads are cumulative. That is to say, loading multiple files will cause the Props class to store all properties.  
+Furthermore, if multiple loaded properties files contain the same key, only the latest value will be kept.  
+Use `Props.clear()` to remove all key-value entries.  
+The class provides a `Props.get(String property)` method to retrieve the value associated with a property  
+and a `Props.size()` method to retrieve the number of properties currently loaded.  
+ 

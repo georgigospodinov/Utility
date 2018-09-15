@@ -2,6 +2,8 @@ package util;
 
 /**
  * Provides a progress bar that can be printed to indicate how much of the data has been generated.
+ *
+ * @version 1.2
  */
 public class ProgressBar {
 
@@ -13,10 +15,28 @@ public class ProgressBar {
     private static final int PROGRESS_BAR_LENGTH = 20; // this is in dashes
     private static final double PROGRESS_PER_DASH = 100 / PROGRESS_BAR_LENGTH;
 
+    /**
+     * Calls {@link ProgressBar#formatBar(int, int, boolean)} with the supplied arguments and true for the carruage return.
+     *
+     * @param workDone  the amount of completed work
+     * @param workTotal the total amount of work that needs to be done
+     * @return The formatted progress bar.
+     * @see ProgressBar#formatBar(int, int, boolean)
+     */
     public static String formatBar(int workDone, int workTotal) {
         return formatBar(workDone, workTotal, true);
     }
 
+    /**
+     * Return a progress bar formatted as:
+     * |--------------------| 100% (workDone/workTotal)
+     * The percentage is calculated as (workDone * 100.0 / workTotal).
+     *
+     * @param workDone           the amount of completed work
+     * @param workTotal          the total amount of work that needs to be done
+     * @param withCarriageReturn whether or not the returned string should start with a \r
+     * @return The formatted progress bar.
+     */
     public static String formatBar(int workDone, int workTotal, boolean withCarriageReturn) {
         StringBuilder sb = new StringBuilder();
         if (withCarriageReturn) sb.append("\r");

@@ -2,6 +2,11 @@ package util;
 
 import java.util.Collection;
 
+/**
+ * Provides a method to "pretty-print" multiple objects.
+ *
+ * @version 2.0
+ */
 public class PrintFormatting {
 
     public static final String NEW_LINE = "\r\n";

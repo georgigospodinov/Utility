@@ -7,6 +7,11 @@ import java.io.IOException;
 import static util.PrintFormatting.NEW_LINE;
 import static util.PrintFormatting.print;
 
+/**
+ * Provides methods to log information to files.
+ *
+ * @version 3.0
+ */
 public class Logger {
 
     private static final int FLUSH_PERIOD = 5000;//ms
@@ -30,8 +35,7 @@ public class Logger {
     public Logger(String filename) {
         try {
             writer = new BufferedWriter(new FileWriter(filename));
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
@@ -44,8 +48,7 @@ public class Logger {
             writer.close();
             contentsUpdated = false;  // Closing causes a flush, so periodicFlush knows not to flush.
             running = false;
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -54,8 +57,7 @@ public class Logger {
         try {
             writer.write(line + NEW_LINE);
             contentsUpdated = true;
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             e.printStackTrace();
         }
     }
@@ -76,15 +78,13 @@ public class Logger {
         while (running) {
             try {
                 Thread.sleep(FLUSH_PERIOD);
-            }
-            catch (InterruptedException ignored) {
+            } catch (InterruptedException ignored) {
             }
 
             if (!contentsUpdated) continue;
             try {
                 writer.flush();
-            }
-            catch (IOException e) {
+            } catch (IOException e) {
                 print("Could not flush log.");
             }
             contentsUpdated = false;
