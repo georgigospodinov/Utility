@@ -7,11 +7,16 @@ import java.util.HashMap;
 
 public class Props {
 
-    public static final HashMap<String, String> PROPERTIES = new HashMap<>();
-    private static final String DEFAULT_PROPS_FILE = "constants.props";
+    private static final HashMap<String, String> PROPERTIES = new HashMap<>();
+    private static final String DEFAULT_PROPS_FILE = "default.props";
     private static final String KEY_VALUE_SEPARATOR = "=";
+    private static final String COMMENT_SYMBOL = "#";
     private static final int KEY_INDEX = 0;
     private static final int VALUE_INDEX = 1;
+
+    public static int size() {
+        return PROPERTIES.size();
+    }
 
     public static String get(String property) {
         if (!PROPERTIES.containsKey(property))
@@ -33,6 +38,9 @@ public class Props {
         }
 
         reader.lines().forEach(line -> {
+            // Skip empty lines and comments
+            if (line.isEmpty() || line.startsWith(COMMENT_SYMBOL)) return;
+
             String [] kv = line.split(KEY_VALUE_SEPARATOR);
             PROPERTIES.put(kv[KEY_INDEX], kv[VALUE_INDEX]);
         });

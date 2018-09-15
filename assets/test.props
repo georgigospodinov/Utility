@@ -1,0 +1,9 @@
+# Standard constants
+CONSTANT_HELLO=HELLO
+CONSTANT_ONE=1
+CONSTANT_PI=3.14
+
+# Unsual constants
+CONSTANT MULTI WORD STRING=Hello World!
+Hello in BG=Здравей!
+
