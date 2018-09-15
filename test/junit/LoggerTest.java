@@ -1,4 +1,4 @@
-package logging;
+package junit;
 
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -7,7 +7,7 @@ import util.Logger;
 
 import java.io.*;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class LoggerTest {
 
@@ -39,7 +39,7 @@ class LoggerTest {
         }
 
         try {
-            assertTrue(reader.readLine().equals(LINE));
+            assertEquals(reader.readLine(), LINE);
         }
         catch (IOException e) {
             e.printStackTrace();
