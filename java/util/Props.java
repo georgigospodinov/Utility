@@ -12,7 +12,9 @@ import java.util.HashMap;
  */
 public class Props {
 
-    private static final HashMap<String, String> PROPERTIES = new HashMap<>();
+    private static final HashMap<String, String> STRING_PROPERTIES = new HashMap<>();
+    private static final HashMap<String, Long> LONG_PROPERTIES = new HashMap<>();
+    private static final HashMap<String, Double> DOUBLE_PROPERTIES = new HashMap<>();
     private static final String DEFAULT_PROPS_FILE = "default.props";
     private static final String KEY_VALUE_SEPARATOR = "=";
     private static final String COMMENT_SYMBOL = "#";
@@ -25,27 +27,55 @@ public class Props {
      * @return the current number of properties
      */
     public static int size() {
-        return PROPERTIES.size();
+        return STRING_PROPERTIES.size()+LONG_PROPERTIES.size()+DOUBLE_PROPERTIES.size();
     }
 
     /**
      * Clears all the loaded properties.
      */
     public static void clear() {
-        PROPERTIES.clear();
+        STRING_PROPERTIES.clear();
+        LONG_PROPERTIES.clear();
+        DOUBLE_PROPERTIES.clear();
     }
 
     /**
-     * Get the value associated with the given property.
+     * Get the {@link Long} value associated with the given property.
      *
      * @param property the property to look for
-     * @return the value associated with that property
+     * @return the long value associated with that property
      */
-    public static String get(String property) {
-        if (!PROPERTIES.containsKey(property))
-            throw new NullPointerException("No property \"" + property + "\"");
+    public static long getLong(String property) {
+        if (!LONG_PROPERTIES.containsKey(property))
+            throw new NullPointerException("No long property \"" + property + "\"");
 
-        return PROPERTIES.get(property);
+        return LONG_PROPERTIES.get(property);
+    }
+
+    /**
+     * Get the {@link Double} value associated with the given property.
+     *
+     * @param property the property to look for
+     * @return the double value associated with that property
+     */
+    public static double getDouble(String property) {
+        if (!DOUBLE_PROPERTIES.containsKey(property))
+            throw new NullPointerException("No double property \"" + property + "\"");
+
+        return DOUBLE_PROPERTIES.get(property);
+    }
+
+    /**
+     * Get the {@link String} value associated with the given property.
+     *
+     * @param property the property to look for
+     * @return the string value associated with that property
+     */
+    public static String getString(String property) {
+        if (!STRING_PROPERTIES.containsKey(property))
+            throw new NullPointerException("No string property \"" + property + "\"");
+
+        return STRING_PROPERTIES.get(property);
     }
 
     public static void load() throws FileNotFoundException {
@@ -72,7 +102,20 @@ public class Props {
             if (line.isEmpty() || line.startsWith(COMMENT_SYMBOL)) return;
 
             String [] kv = line.split(KEY_VALUE_SEPARATOR);
-            PROPERTIES.put(kv[KEY_INDEX], kv[VALUE_INDEX]);
+            String key = kv[KEY_INDEX];
+            String val = kv[VALUE_INDEX];
+            try {
+                long value = Long.parseLong(val);
+                LONG_PROPERTIES.put(key, value);
+            }
+            catch (NumberFormatException nfe) {
+                try {
+                    double value = Double.parseDouble(val);
+                    DOUBLE_PROPERTIES.put(key,value);
+                } catch (NumberFormatException e) {
+                    STRING_PROPERTIES.put(key, val);
+                }
+            }
         });
     }
 

@@ -19,11 +19,11 @@ class PropsTest {
 
     @Test
     void testLoad() {
-        assertEquals(Props.get("CONSTANT_HELLO"), "HELLO");
-        assertEquals(Props.get("CONSTANT_ONE"), "1");
-        assertEquals(Props.get("CONSTANT_PI"), "3.14");
-        assertEquals(Props.get("CONSTANT MULTI WORD STRING"), "Hello World!");
-        assertEquals(Props.get("Hello in BG"), "Здравей!");
+        assertEquals(Props.getString("CONSTANT_HELLO"), "HELLO");
+        assertEquals(Props.getLong("CONSTANT_ONE"), 1);
+        assertEquals(Props.getDouble("CONSTANT_PI"), 3.14);
+        assertEquals(Props.getString("CONSTANT MULTI WORD STRING"), "Hello World!");
+        assertEquals(Props.getString("Hello in BG"), "Здравей!");
         assertEquals(Props.size(), 5);
     }
 
