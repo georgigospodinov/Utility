@@ -24,7 +24,21 @@ class PropsTest {
         assertEquals(Props.getDouble("CONSTANT_PI"), 3.14);
         assertEquals(Props.getString("CONSTANT MULTI WORD STRING"), "Hello World!");
         assertEquals(Props.getString("Hello in BG"), "Здравей!");
-        assertEquals(Props.size(), 5);
+        assertEquals(Props.getDouble("sample"), 1.0);
+        assertEquals(Props.size(), 6);
+    }
+
+    @Test
+    void testMissing() {
+        assertThrows(NullPointerException.class, () -> {
+            Props.getLong("sample");
+        });
+        assertThrows(NullPointerException.class, () -> {
+            Props.getString("CONSTANT_ONE");
+        });
+        assertThrows(NullPointerException.class, () -> {
+            Props.getString("nothing");
+        });
     }
 
     @Test
