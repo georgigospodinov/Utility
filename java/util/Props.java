@@ -8,7 +8,7 @@ import java.util.HashMap;
 /**
  * Provides reading of ".props" files.
  *
- * @version 1.4
+ * @version 1.5
  */
 public class Props {
 
@@ -171,6 +171,8 @@ public class Props {
         try {  // Is this a float?
             float value = Float.parseFloat(val);
             if (value == Float.POSITIVE_INFINITY)
+                throw new NumberFormatException();
+            if (value == Float.NEGATIVE_INFINITY)
                 throw new NumberFormatException();
             FLOAT_PROPERTIES.put(key, value);
             return;
