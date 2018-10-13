@@ -2,12 +2,15 @@
 CONSTANT_HELLO=HELLO
 CONSTANT_ONE=1
 CONSTANT_PI=3.14
+NEGATIVE=-3
 
 # Unsual constants
 CONSTANT MULTI WORD STRING=Hello World!
 Hello in BG=Здравей!
 sample=1.0
 
-# Integer vs Long constant
+# Types
 my long=9223372036854775807
 my int=2
+my float=-0.3
+my double=1.797693E41

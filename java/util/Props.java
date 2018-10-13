@@ -16,6 +16,7 @@ public class Props {
     private static final HashMap<String, Long> LONG_PROPERTIES = new HashMap<>();
     private static final HashMap<String, Integer> INT_PROPERTIES = new HashMap<>();
     private static final HashMap<String, Double> DOUBLE_PROPERTIES = new HashMap<>();
+    private static final HashMap<String, Float> FLOAT_PROPERTIES = new HashMap<>();
     private static final String DEFAULT_PROPS_FILE = "default.props";
     private static final String KEY_VALUE_SEPARATOR = "=";
     private static final String COMMENT_SYMBOL = "#";
@@ -32,7 +33,8 @@ public class Props {
         int is = INT_PROPERTIES.size();
         int ls = LONG_PROPERTIES.size();
         int ds = DOUBLE_PROPERTIES.size();
-        return  ss+is+ls+ds;
+        int fs = FLOAT_PROPERTIES.size();
+        return ss + is + ls + ds + fs;
     }
 
     /**
@@ -40,9 +42,10 @@ public class Props {
      */
     public static void clear() {
         STRING_PROPERTIES.clear();
-        LONG_PROPERTIES.clear();
-        DOUBLE_PROPERTIES.clear();
         INT_PROPERTIES.clear();
+        LONG_PROPERTIES.clear();
+        FLOAT_PROPERTIES.clear();
+        DOUBLE_PROPERTIES.clear();
     }
 
     /**
@@ -53,33 +56,54 @@ public class Props {
      */
     public static long getInt(String property) {
         if (!INT_PROPERTIES.containsKey(property))
-            throw new NullPointerException("No long property \"" + property + "\"");
+            throw new NullPointerException("No integer property \"" + property + "\"");
 
         return INT_PROPERTIES.get(property);
     }
 
     /**
      * Get the {@link Long} value associated with the given property.
+     * This method will check for an integer value if no long value is found.
      *
      * @param property the property to look for
      * @return the long value associated with that property
      */
     public static long getLong(String property) {
-        if (!LONG_PROPERTIES.containsKey(property))
-            throw new NullPointerException("No long property \"" + property + "\"");
+        if (!LONG_PROPERTIES.containsKey(property)) {
+            if (!INT_PROPERTIES.containsKey(property))
+                throw new NullPointerException("No long property \"" + property + "\"");
+            return INT_PROPERTIES.get(property);
+        }
 
         return LONG_PROPERTIES.get(property);
     }
 
     /**
-     * Get the {@link Double} value associated with the given property.
+     * Get the {@link Float} value associated with the given property.
      *
      * @param property the property to look for
      * @return the double value associated with that property
      */
+    public static float getFloat(String property) {
+        if (!FLOAT_PROPERTIES.containsKey(property))
+            throw new NullPointerException("No float property \"" + property + "\"");
+
+        return FLOAT_PROPERTIES.get(property);
+    }
+
+    /**
+     * Get the {@link Double} value associated with the given property.
+     * This method will check for a float value if no double value is found.
+     *
+     * @param property the property to look for
+     * @return the long value associated with that property
+     */
     public static double getDouble(String property) {
-        if (!DOUBLE_PROPERTIES.containsKey(property))
-            throw new NullPointerException("No double property \"" + property + "\"");
+        if (!DOUBLE_PROPERTIES.containsKey(property)) {
+            if (!FLOAT_PROPERTIES.containsKey(property))
+                throw new NullPointerException("No double property \"" + property + "\"");
+            return FLOAT_PROPERTIES.get(property);
+        }
 
         return DOUBLE_PROPERTIES.get(property);
     }
@@ -117,33 +141,52 @@ public class Props {
             throw new FileNotFoundException("Could not find props file \"" + filename + "\"");
         }
 
-        reader.lines().forEach(line -> {
-            // Skip empty lines and comments
-            if (line.isEmpty() || line.startsWith(COMMENT_SYMBOL)) return;
-
-            String[] kv = line.split(KEY_VALUE_SEPARATOR);
-            String key = kv[KEY_INDEX];
-            String val = kv[VALUE_INDEX];
-            try {
-                try {
-                    int value = Integer.parseInt(val);
-                    INT_PROPERTIES.put(key, value);
-                }
-                catch (NumberFormatException e) {
-                    long value = Long.parseLong(val);
-                    LONG_PROPERTIES.put(key, value);
-                }
-            }
-            catch (NumberFormatException nfe) {
-                try {
-                    double value = Double.parseDouble(val);
-                    DOUBLE_PROPERTIES.put(key, value);
-                }
-                catch (NumberFormatException e) {
-                    STRING_PROPERTIES.put(key, val);
-                }
-            }
-        });
+        reader.lines().forEach(Props::loadLine);
     }
 
+    private static void loadLine(String line) {
+        // Skip empty lines and comments
+        if (line.isEmpty() || line.startsWith(COMMENT_SYMBOL)) return;
+
+        String[] kv = line.split(KEY_VALUE_SEPARATOR);
+        String key = kv[KEY_INDEX];
+        String val = kv[VALUE_INDEX];
+
+        try {  // Is this an integer?
+            int value = Integer.parseInt(val);
+            INT_PROPERTIES.put(key, value);
+            return;
+        }
+        catch (NumberFormatException ignored) {
+        }
+
+        try {  // Is this a long?
+            long value = Long.parseLong(val);
+            LONG_PROPERTIES.put(key, value);
+            return;
+        }
+        catch (NumberFormatException ignored) {
+        }
+
+        try {  // Is this a float?
+            float value = Float.parseFloat(val);
+            if (value == Float.POSITIVE_INFINITY)
+                throw new NumberFormatException();
+            FLOAT_PROPERTIES.put(key, value);
+            return;
+        }
+        catch (NumberFormatException ignored) {
+        }
+
+        try {  // Is this a double?
+            double value = Double.parseDouble(val);
+            DOUBLE_PROPERTIES.put(key, value);
+            return;
+        }
+        catch (NumberFormatException ignored) {
+        }
+
+        STRING_PROPERTIES.put(key, val);
+
+    }
 }
