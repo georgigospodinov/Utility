@@ -13,7 +13,7 @@ public class ProgressBar {
 
     private static final String PROGRESS_BAR_DASH = "-";
     private static final int PROGRESS_BAR_LENGTH = 20; // this is in dashes
-    private static final double PROGRESS_PER_DASH = 100 / PROGRESS_BAR_LENGTH;
+    private static final double PROGRESS_PER_DASH = 100d / PROGRESS_BAR_LENGTH;
 
     /**
      * Calls {@link ProgressBar#formatBar(int, int, boolean)} with the supplied arguments and true for the carruage return.
@@ -42,7 +42,7 @@ public class ProgressBar {
         if (withCarriageReturn) sb.append("\r");
         sb.append("|");
 
-        double progress = workDone * 100.0 / workTotal;
+        double progress = workDone * 100d / workTotal;
         int numberOfDashes = (int) (progress / PROGRESS_PER_DASH);
         int i;
         for (i = 0; i < numberOfDashes; i++) sb.append(PROGRESS_BAR_DASH);

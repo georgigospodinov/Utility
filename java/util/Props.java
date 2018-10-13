@@ -8,12 +8,13 @@ import java.util.HashMap;
 /**
  * Provides reading of ".props" files.
  *
- * @version 1.3
+ * @version 1.4
  */
 public class Props {
 
     private static final HashMap<String, String> STRING_PROPERTIES = new HashMap<>();
     private static final HashMap<String, Long> LONG_PROPERTIES = new HashMap<>();
+    private static final HashMap<String, Integer> INT_PROPERTIES = new HashMap<>();
     private static final HashMap<String, Double> DOUBLE_PROPERTIES = new HashMap<>();
     private static final String DEFAULT_PROPS_FILE = "default.props";
     private static final String KEY_VALUE_SEPARATOR = "=";
@@ -27,7 +28,11 @@ public class Props {
      * @return the current number of properties
      */
     public static int size() {
-        return STRING_PROPERTIES.size()+LONG_PROPERTIES.size()+DOUBLE_PROPERTIES.size();
+        int ss = STRING_PROPERTIES.size();
+        int is = INT_PROPERTIES.size();
+        int ls = LONG_PROPERTIES.size();
+        int ds = DOUBLE_PROPERTIES.size();
+        return  ss+is+ls+ds;
     }
 
     /**
@@ -37,6 +42,20 @@ public class Props {
         STRING_PROPERTIES.clear();
         LONG_PROPERTIES.clear();
         DOUBLE_PROPERTIES.clear();
+        INT_PROPERTIES.clear();
+    }
+
+    /**
+     * Get the {@link Integer} value associated with the given property.
+     *
+     * @param property the property to look for
+     * @return the integer value associated with that property
+     */
+    public static long getInt(String property) {
+        if (!INT_PROPERTIES.containsKey(property))
+            throw new NullPointerException("No long property \"" + property + "\"");
+
+        return INT_PROPERTIES.get(property);
     }
 
     /**
@@ -93,7 +112,8 @@ public class Props {
         BufferedReader reader;
         try {
             reader = new BufferedReader(new FileReader(filename));
-        } catch (FileNotFoundException e) {
+        }
+        catch (FileNotFoundException e) {
             throw new FileNotFoundException("Could not find props file \"" + filename + "\"");
         }
 
@@ -101,18 +121,25 @@ public class Props {
             // Skip empty lines and comments
             if (line.isEmpty() || line.startsWith(COMMENT_SYMBOL)) return;
 
-            String [] kv = line.split(KEY_VALUE_SEPARATOR);
+            String[] kv = line.split(KEY_VALUE_SEPARATOR);
             String key = kv[KEY_INDEX];
             String val = kv[VALUE_INDEX];
             try {
-                long value = Long.parseLong(val);
-                LONG_PROPERTIES.put(key, value);
+                try {
+                    int value = Integer.parseInt(val);
+                    INT_PROPERTIES.put(key, value);
+                }
+                catch (NumberFormatException e) {
+                    long value = Long.parseLong(val);
+                    LONG_PROPERTIES.put(key, value);
+                }
             }
             catch (NumberFormatException nfe) {
                 try {
                     double value = Double.parseDouble(val);
-                    DOUBLE_PROPERTIES.put(key,value);
-                } catch (NumberFormatException e) {
+                    DOUBLE_PROPERTIES.put(key, value);
+                }
+                catch (NumberFormatException e) {
                     STRING_PROPERTIES.put(key, val);
                 }
             }

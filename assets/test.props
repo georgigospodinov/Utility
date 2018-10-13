@@ -8,3 +8,6 @@ CONSTANT MULTI WORD STRING=Hello World!
 Hello in BG=Здравей!
 sample=1.0
 
+# Integer vs Long constant
+my long=9223372036854775807
+my int=2

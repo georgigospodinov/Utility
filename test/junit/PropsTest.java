@@ -20,12 +20,12 @@ class PropsTest {
     @Test
     void testLoad() {
         assertEquals(Props.getString("CONSTANT_HELLO"), "HELLO");
-        assertEquals(Props.getLong("CONSTANT_ONE"), 1);
+        assertEquals(Props.getInt("CONSTANT_ONE"), 1);
         assertEquals(Props.getDouble("CONSTANT_PI"), 3.14);
         assertEquals(Props.getString("CONSTANT MULTI WORD STRING"), "Hello World!");
         assertEquals(Props.getString("Hello in BG"), "Здравей!");
         assertEquals(Props.getDouble("sample"), 1.0);
-        assertEquals(Props.size(), 6);
+        assertEquals(Props.size(), 8);
     }
 
     @Test
@@ -39,6 +39,14 @@ class PropsTest {
         assertThrows(NullPointerException.class, () -> {
             Props.getString("nothing");
         });
+    }
+
+    @Test
+    void testIntLong() {
+        assertEquals(Props.getInt("my int"), 2);
+        assertEquals(Props.getLong("my long"), 9223372036854775807L);
+        assertThrows(NullPointerException.class, () -> Props.getInt("my long"));
+        assertThrows(NullPointerException.class, () -> Props.getLong("my int"));
     }
 
     @Test
