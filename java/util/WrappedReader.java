@@ -1,9 +1,6 @@
 package util;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.stream.Stream;
 
 /**
@@ -45,6 +42,26 @@ public class WrappedReader {
      */
     public WrappedReader(String filename) {
         this(filename, null);
+    }
+
+
+    /**
+     * Opens a {@link BufferedReader} to {@link System#in}.
+     *
+     * @param l {@link Logger} to be used for logging {@link IOException}s.
+     */
+    public WrappedReader(Logger l) {
+        this.l = l;
+        reader = new BufferedReader(new InputStreamReader(System.in));
+    }
+
+    /**
+     * Opens a {@link BufferedReader} to {@link System#in}.
+     * {@link IOException}s will be printed to standard error.
+     */
+    public WrappedReader() {
+        l = null;
+        reader = new BufferedReader(new InputStreamReader(System.in));
     }
 
     /**
