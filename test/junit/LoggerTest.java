@@ -4,8 +4,9 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import util.Logger;
+import util.WrappedReader;
 
-import java.io.*;
+import java.io.File;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -29,21 +30,9 @@ class LoggerTest {
 
     @Test
     void readTheLog() {
-        BufferedReader reader;
-        try {
-            reader = new BufferedReader(new FileReader(LOG_FILE));
-        }
-        catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return;
-        }
-
-        try {
-            assertEquals(reader.readLine(), LINE);
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
+        WrappedReader reader;
+        reader = new WrappedReader(LOG_FILE);
+        assertEquals(reader.readLine(), LINE);
     }
 
 }
