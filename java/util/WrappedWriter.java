@@ -37,7 +37,7 @@ public class WrappedWriter {
     /**
      * Opens a {@link BufferedWriter} to the given filename.
      * {@link IOException}s will be printed to standard error.
-     * This method is equivalent to calling {@link WrappedWriter#WrappedWriter(String, Logger)} with null as the second argument,
+     * This is equivalent to using {@link WrappedWriter#WrappedWriter(String, Logger)} with null as the second argument.
      *
      * @param filename filename of output file
      */

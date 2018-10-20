@@ -6,7 +6,7 @@ import java.util.stream.Stream;
 /**
  * Wraps {@link BufferedReader}, so that methods can be called without having to try-catch.
  *
- * @version 1.0
+ * @version 1.2
  */
 public class WrappedReader {
     private Logger l;
@@ -36,7 +36,7 @@ public class WrappedReader {
     /**
      * Opens a {@link BufferedReader} to the given filename.
      * {@link IOException}s will be printed to standard error.
-     * This method is equivalent to calling {@link WrappedReader#WrappedReader(String, Logger)} with null as the second argument,
+     * This is equivalent to using {@link WrappedReader#WrappedReader(String, Logger)} with null as the second argument.
      *
      * @param filename filename of input file
      */
@@ -44,24 +44,46 @@ public class WrappedReader {
         this(filename, null);
     }
 
+    /**
+     * Opens a {@link BufferedReader} to the given {@link InputStream}.
+     *
+     * @param in {@link InputStream} to read
+     * @param l  {@link Logger} to be used for logging {@link IOException}s.
+     */
+    public WrappedReader(InputStream in, Logger l) {
+        this.l = l;
+        reader = new BufferedReader(new InputStreamReader(in));
+    }
+
+    /**
+     * Opens a {@link BufferedReader} to the given {@link InputStream}.
+     * {@link IOException}s will be printed to standard error.
+     * This is equivalent to using {@link WrappedReader#WrappedReader(InputStream, Logger)} with null as the second argument.
+     *
+     * @param in {@link InputStream} to read
+     */
+    public WrappedReader(InputStream in) {
+        this(in, null);
+    }
 
     /**
      * Opens a {@link BufferedReader} to {@link System#in}.
+     * This is equivalent to using {@link WrappedReader#WrappedReader(InputStream, Logger)} with {@link System#in} as the first argument.
      *
      * @param l {@link Logger} to be used for logging {@link IOException}s.
      */
     public WrappedReader(Logger l) {
-        this.l = l;
-        reader = new BufferedReader(new InputStreamReader(System.in));
+        this(System.in, l);
     }
 
     /**
      * Opens a {@link BufferedReader} to {@link System#in}.
      * {@link IOException}s will be printed to standard error.
+     *
+     * This is equivalent to using {@link WrappedReader#WrappedReader(InputStream)} with {@link System#in} as the argument.
      */
     public WrappedReader() {
-        l = null;
-        reader = new BufferedReader(new InputStreamReader(System.in));
+        this(System.in);
     }
 
     /**
