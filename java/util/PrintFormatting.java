@@ -13,7 +13,6 @@ import java.util.Collection;
 public class PrintFormatting {
 
     public static final String NEW_LINE = AccessController.doPrivileged(new GetPropertyAction("line.separator"));
-    ;
     public static final String SEPARATOR = ",";
 
     public static void print(Object... objects) {

@@ -4,6 +4,11 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 
+/**
+ * Wraps a {@link BufferedWriter}, so that methods can be called without having to try-catch.
+ *
+ * @version 1.1
+ */
 public class WrappedWriter {
     private Logger l;
     private BufferedWriter writer;
@@ -13,6 +18,12 @@ public class WrappedWriter {
         else l.log(e);
     }
 
+    /**
+     * Opens a {@link BufferedWriter} to the given filename.
+     *
+     * @param filename filename of output file
+     * @param l        {@link Logger} to be used for logging {@link IOException}s.
+     */
     public WrappedWriter(String filename, Logger l) {
         this.l = l;
         try {
@@ -23,10 +34,22 @@ public class WrappedWriter {
         }
     }
 
+    /**
+     * Opens a {@link BufferedWriter} to the given filename.
+     * {@link IOException}s will be printed to standard error.
+     * This method is equivalent to calling {@link WrappedWriter#WrappedWriter(String, Logger)} with null as the second argument,
+     *
+     * @param filename filename of output file
+     */
     public WrappedWriter(String filename) {
         this(filename, null);
     }
 
+    /**
+     * Writes a {@link String}.
+     *
+     * @param s String to be written
+     */
     public void write(String s) {
         try {
             writer.write(s);
@@ -36,11 +59,22 @@ public class WrappedWriter {
         }
     }
 
+    /**
+     * Writes the given {@link String} and then a line separator.
+     * This method is equivalent to calling {@link WrappedWriter#write(String)}, followed by {@link WrappedWriter#newLine()}.
+     *
+     * @param s String to be written
+     */
     public void writeLine(String s) {
         write(s);
         newLine();
     }
 
+    /**
+     * Writes a single character. (Unicode)
+     *
+     * @param c the character to be written
+     */
     public void write(int c) {
         try {
             writer.write(c);
@@ -50,6 +84,11 @@ public class WrappedWriter {
         }
     }
 
+    /**
+     * Writes a line separator.
+     * The line separator string is defined by the system property line.separator,
+     * and is not necessarily a single newline ('\n') character.
+     */
     public void newLine() {
         try {
             writer.newLine();
@@ -59,6 +98,9 @@ public class WrappedWriter {
         }
     }
 
+    /**
+     * Flushes the writer.
+     */
     public void flush() {
         try {
             writer.flush();
@@ -68,6 +110,9 @@ public class WrappedWriter {
         }
     }
 
+    /**
+     * Closes the writer, flushing it first.
+     */
     public void close() {
         try {
             writer.close();

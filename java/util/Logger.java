@@ -1,22 +1,15 @@
 package util;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-
-import static util.PrintFormatting.NEW_LINE;
-import static util.PrintFormatting.print;
-
 /**
  * Provides methods to log information to files.
  *
- * @version 3.0
+ * @version 3.1
  */
 public class Logger {
 
     private static final int FLUSH_PERIOD = 5000;//ms
 
-    private BufferedWriter writer = null;
+    private WrappedWriter writer;
 
     /**
      * Used to control the flushing thread.
@@ -32,36 +25,43 @@ public class Logger {
      */
     private boolean running;
 
+    /**
+     * Opens a file to log to.
+     * Starts a thread to periodically flush the log, so that if the main process crashes, some log remains.
+     *
+     * @param filename the name of the file to use for logging
+     */
     public Logger(String filename) {
-        try {
-            writer = new BufferedWriter(new FileWriter(filename));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
+        writer = new WrappedWriter(filename);
         running = true;
         new Thread(this::periodicFlush).start();
     }
 
+    /**
+     * Closes the logger.
+     */
     public void close() {
-        try {
-            writer.close();
-            contentsUpdated = false;  // Closing causes a flush, so periodicFlush knows not to flush.
-            running = false;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        writer.close();
+        contentsUpdated = false;  // Closing causes a flush, so periodicFlush knows not to flush.
+        running = false;
     }
 
+    /**
+     * Writes the given line to the log file and appends a line separator.
+     *
+     * @param line line to write
+     */
     public void log(String line) {
-        try {
-            writer.write(line + NEW_LINE);
-            contentsUpdated = true;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        writer.writeLine(line);
+        contentsUpdated = true;
     }
 
+    /**
+     * Writes the given {@link Exception}'s description and then
+     * the {@link StackTraceElement}s of the given {@link Exception} to the log file.
+     *
+     * @param e {@link Exception} to log
+     */
     public void log(Exception e) {
         log(e.toString());
         StackTraceElement[] stack = e.getStackTrace();
@@ -78,15 +78,12 @@ public class Logger {
         while (running) {
             try {
                 Thread.sleep(FLUSH_PERIOD);
-            } catch (InterruptedException ignored) {
+            }
+            catch (InterruptedException ignored) {
             }
 
             if (!contentsUpdated) continue;
-            try {
-                writer.flush();
-            } catch (IOException e) {
-                print("Could not flush log.");
-            }
+            writer.flush();
             contentsUpdated = false;
         }
     }
