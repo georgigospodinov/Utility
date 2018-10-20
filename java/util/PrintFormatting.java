@@ -1,15 +1,19 @@
 package util;
 
+import sun.security.action.GetPropertyAction;
+
+import java.security.AccessController;
 import java.util.Collection;
 
 /**
  * Provides a method to "pretty-print" multiple objects.
  *
- * @version 2.0
+ * @version 2.1
  */
 public class PrintFormatting {
 
-    public static final String NEW_LINE = "\r\n";
+    public static final String NEW_LINE = AccessController.doPrivileged(new GetPropertyAction("line.separator"));
+    ;
     public static final String SEPARATOR = ",";
 
     public static void print(Object... objects) {
