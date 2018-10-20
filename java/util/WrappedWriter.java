@@ -5,7 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 /**
- * Wraps a {@link BufferedWriter}, so that methods can be called without having to try-catch.
+ * Wraps {@link BufferedWriter}, so that methods can be called without having to try-catch.
  *
  * @version 1.1
  */
