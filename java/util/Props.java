@@ -8,15 +8,15 @@ import java.util.HashMap;
 /**
  * Provides reading of ".props" files.
  *
- * @version 1.5
+ * @version 2.0
  */
 public class Props {
 
-    private static final HashMap<String, String> STRING_PROPERTIES = new HashMap<>();
-    private static final HashMap<String, Long> LONG_PROPERTIES = new HashMap<>();
-    private static final HashMap<String, Integer> INT_PROPERTIES = new HashMap<>();
-    private static final HashMap<String, Double> DOUBLE_PROPERTIES = new HashMap<>();
-    private static final HashMap<String, Float> FLOAT_PROPERTIES = new HashMap<>();
+    private final HashMap<String, String> STRING_PROPERTIES = new HashMap<>();
+    private final HashMap<String, Long> LONG_PROPERTIES = new HashMap<>();
+    private final HashMap<String, Integer> INT_PROPERTIES = new HashMap<>();
+    private final HashMap<String, Double> DOUBLE_PROPERTIES = new HashMap<>();
+    private final HashMap<String, Float> FLOAT_PROPERTIES = new HashMap<>();
     private static final String DEFAULT_PROPS_FILE = "default.props";
     private static final String KEY_VALUE_SEPARATOR = "=";
     private static final String COMMENT_SYMBOL = "#";
@@ -28,7 +28,7 @@ public class Props {
      *
      * @return the current number of properties
      */
-    public static int size() {
+    public int size() {
         int ss = STRING_PROPERTIES.size();
         int is = INT_PROPERTIES.size();
         int ls = LONG_PROPERTIES.size();
@@ -40,7 +40,7 @@ public class Props {
     /**
      * Clears all the loaded properties.
      */
-    public static void clear() {
+    public void clear() {
         STRING_PROPERTIES.clear();
         INT_PROPERTIES.clear();
         LONG_PROPERTIES.clear();
@@ -54,7 +54,7 @@ public class Props {
      * @param property the property to look for
      * @return the integer value associated with that property
      */
-    public static long getInt(String property) {
+    public long getInt(String property) {
         if (!INT_PROPERTIES.containsKey(property))
             throw new NullPointerException("No integer property \"" + property + "\"");
 
@@ -68,7 +68,7 @@ public class Props {
      * @param property the property to look for
      * @return the long value associated with that property
      */
-    public static long getLong(String property) {
+    public long getLong(String property) {
         if (!LONG_PROPERTIES.containsKey(property)) {
             if (!INT_PROPERTIES.containsKey(property))
                 throw new NullPointerException("No long property \"" + property + "\"");
@@ -84,7 +84,7 @@ public class Props {
      * @param property the property to look for
      * @return the double value associated with that property
      */
-    public static float getFloat(String property) {
+    public float getFloat(String property) {
         if (!FLOAT_PROPERTIES.containsKey(property))
             throw new NullPointerException("No float property \"" + property + "\"");
 
@@ -98,7 +98,7 @@ public class Props {
      * @param property the property to look for
      * @return the long value associated with that property
      */
-    public static double getDouble(String property) {
+    public double getDouble(String property) {
         if (!DOUBLE_PROPERTIES.containsKey(property)) {
             if (!FLOAT_PROPERTIES.containsKey(property))
                 throw new NullPointerException("No double property \"" + property + "\"");
@@ -114,14 +114,14 @@ public class Props {
      * @param property the property to look for
      * @return the string value associated with that property
      */
-    public static String getString(String property) {
+    public String getString(String property) {
         if (!STRING_PROPERTIES.containsKey(property))
             throw new NullPointerException("No string property \"" + property + "\"");
 
         return STRING_PROPERTIES.get(property);
     }
 
-    public static void load() throws FileNotFoundException {
+    public void load() throws FileNotFoundException {
         load(DEFAULT_PROPS_FILE);
     }
 
@@ -132,7 +132,7 @@ public class Props {
      *                 This can be absolute or relative path.
      * @throws FileNotFoundException if there is no file with the given name
      */
-    public static void load(String filename) throws FileNotFoundException {
+    public void load(String filename) throws FileNotFoundException {
         BufferedReader reader;
         try {
             reader = new BufferedReader(new FileReader(filename));
@@ -141,10 +141,25 @@ public class Props {
             throw new FileNotFoundException("Could not find props file \"" + filename + "\"");
         }
 
-        reader.lines().forEach(Props::loadLine);
+        reader.lines().forEach(this::loadLine);
     }
 
-    private static void loadLine(String line) {
+    public Props() {
+    }
+
+    public Props(String filename) throws FileNotFoundException {
+        BufferedReader reader;
+        try {
+            reader = new BufferedReader(new FileReader(filename));
+        }
+        catch (FileNotFoundException e) {
+            throw new FileNotFoundException("Could not find props file \"" + filename + "\"");
+        }
+
+        reader.lines().forEach(this::loadLine);
+    }
+
+    private void loadLine(String line) {
         // Skip empty lines and comments
         if (line.isEmpty() || line.startsWith(COMMENT_SYMBOL)) return;
 
