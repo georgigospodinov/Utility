@@ -54,7 +54,7 @@ public class Props {
      * @param property the property to look for
      * @return the integer value associated with that property
      */
-    public long getInt(String property) {
+    public int getInt(String property) {
         if (!INT_PROPERTIES.containsKey(property))
             throw new NullPointerException("No integer property \"" + property + "\"");
 
