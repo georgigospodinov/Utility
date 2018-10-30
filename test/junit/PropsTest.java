@@ -6,8 +6,7 @@ import util.Props;
 
 import java.io.FileNotFoundException;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class PropsTest {
 
@@ -30,7 +29,7 @@ class PropsTest {
         assertEquals(p.getString("Hello in BG"), "Здравей!");
         assertEquals(p.getDouble("sample"), 1.0);
         assertEquals(p.getFloat("sample"), 1.0);
-        assertEquals(p.size(), 11);
+        assertEquals(p.size(), 12);
     }
 
     @Test
@@ -51,11 +50,26 @@ class PropsTest {
     }
 
     @Test
-    void testDoubleLong() {
+    void testFloatDouble() {
         assertEquals(p.getFloat("my float"), -0.3f);
         assertEquals(p.getDouble("my float"), -0.3f);
         assertEquals(p.getDouble("my double"), 1.797693E41);
         assertThrows(NullPointerException.class, () -> p.getFloat("my double"));
+    }
+
+    @Test
+    void testAnyNumber() {
+        assertEquals(p.getAnyInt("my int"), 2);
+        assertEquals(p.getAnyInt("my long"), (int) 9223372036854775807L);
+        assertEquals(p.getAnyInt("my float"), 0);
+        assertEquals(p.getAnyInt("my double"), (int) 1.797693E41);
+    }
+
+    @Test
+    void testTrue() {
+        assertTrue(p.isTrue("my boolean"));
+        assertFalse(p.isTrue("CONSTANT_HELLO"));
+        assertThrows(NullPointerException.class, () -> p.isTrue("my int"));
     }
 
     @Test

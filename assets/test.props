@@ -14,3 +14,4 @@ my long=9223372036854775807
 my int=2
 my float=-0.3
 my double=1.797693E41
+my boolean=true

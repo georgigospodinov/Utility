@@ -109,6 +109,43 @@ public class Props {
     }
 
     /**
+     * Get the number associated with the given property.
+     * This method checks for a {@link Integer}, {@link Long}, {@link Float}, and {@link Double} in this order.
+     * Once found, it is cast to integer and returned.
+     *
+     * @param property the property to look for
+     * @return the value associated with that property after being cast to integer.
+     */
+    public int getAnyInt(String property) {
+        if (INT_PROPERTIES.containsKey(property))
+            return INT_PROPERTIES.get(property);
+
+        if (LONG_PROPERTIES.containsKey(property))
+            return LONG_PROPERTIES.get(property).intValue();
+
+        if (FLOAT_PROPERTIES.containsKey(property))
+            return FLOAT_PROPERTIES.get(property).intValue();
+
+        if (DOUBLE_PROPERTIES.containsKey(property))
+            return DOUBLE_PROPERTIES.get(property).intValue();
+
+        throw new NullPointerException("No number property \"" + property + "\"");
+    }
+
+    /**
+     * Checks if the String associated with the given property is equal to "true".
+     *
+     * @param property the property to look for
+     * @return true if and only if the String associated with this property is equal to "true".
+     */
+    public boolean isTrue(String property) {
+        if (!STRING_PROPERTIES.containsKey(property))
+            throw new NullPointerException("No string property \"" + property + "\"");
+
+        return STRING_PROPERTIES.get(property).equals("true");
+    }
+
+    /**
      * Get the {@link String} value associated with the given property.
      *
      * @param property the property to look for
