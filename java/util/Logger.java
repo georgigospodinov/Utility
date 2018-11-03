@@ -57,14 +57,14 @@ public class Logger {
     }
 
     /**
-     * Writes the given {@link Exception}'s description and then
-     * the {@link StackTraceElement}s of the given {@link Exception} to the log file.
+     * Writes the given {@link Throwable}'s description and then
+     * the {@link StackTraceElement}s of the given {@link Throwable} to the log file.
      *
-     * @param e {@link Exception} to log
+     * @param t {@link Throwable} to log
      */
-    public void log(Exception e) {
-        log(e.toString());
-        StackTraceElement[] stack = e.getStackTrace();
+    public void log(Throwable t) {
+        log(t.toString());
+        StackTraceElement[] stack = t.getStackTrace();
         for (StackTraceElement element : stack)
             log("\t" + element.toString());
     }
