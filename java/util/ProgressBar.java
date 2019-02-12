@@ -39,13 +39,17 @@ public class ProgressBar {
      */
     public static String formatBar(int workDone, int workTotal, boolean withCarriageReturn) {
         StringBuilder sb = new StringBuilder();
-        if (withCarriageReturn) sb.append("\r");
+        if (withCarriageReturn) {
+            sb.append("\r");
+        }
         sb.append("|");
 
         double progress = workDone * 100d / workTotal;
         int numberOfDashes = (int) (progress / PROGRESS_PER_DASH);
         int i;
-        for (i = 0; i < numberOfDashes; i++) sb.append(PROGRESS_BAR_DASH);
+        for (i = 0; i < numberOfDashes; i++) {
+            sb.append(PROGRESS_BAR_DASH);
+        }
         while (i < PROGRESS_BAR_LENGTH) {
             sb.append(" ");
             i++;
@@ -54,4 +58,5 @@ public class ProgressBar {
         sb.append("(").append(workDone).append("/").append(workTotal).append(")");
         return sb.toString();
     }
+
 }

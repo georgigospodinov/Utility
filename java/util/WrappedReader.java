@@ -1,7 +1,9 @@
 package util;
 
 import java.io.*;
-import java.util.stream.Stream;
+import java.util.stream.*;
+
+import static util.PrintFormatting.*;
 
 /**
  * Wraps {@link BufferedReader}, so that methods can be called without having to try-catch.
@@ -9,13 +11,9 @@ import java.util.stream.Stream;
  * @version 1.2
  */
 public class WrappedReader {
+
     private Logger l;
     private BufferedReader reader;
-
-    private void defaultCatch(Exception e) {
-        if (l == null) e.printStackTrace();
-        else l.log(e);
-    }
 
     /**
      * Opens a {@link BufferedReader} to the given filename.
@@ -27,8 +25,7 @@ public class WrappedReader {
         this.l = l;
         try {
             reader = new BufferedReader(new FileReader(filename));
-        }
-        catch (FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             defaultCatch(e);
         }
     }
@@ -48,7 +45,7 @@ public class WrappedReader {
      * Opens a {@link BufferedReader} to the given {@link InputStream}.
      *
      * @param in {@link InputStream} to read
-     * @param l  {@link Logger} to be used for logging {@link IOException}s.
+     * @param l  {@link Logger} used for logging {@link IOException}s.
      */
     public WrappedReader(InputStream in, Logger l) {
         this.l = l;
@@ -87,6 +84,45 @@ public class WrappedReader {
     }
 
     /**
+     * Reads the full contents of the specified file line by line
+     * and returns them in a single {@link String}.
+     *
+     * @param filename the name of the file to read
+     * @param l        {@link Logger} used for logging {@link IOException}s.
+     * @return a {@link String} containing all the lines of the file
+     */
+    public static String readFile(final String filename, final Logger l) {
+        WrappedReader reader = new WrappedReader(filename, l);
+        StringBuilder sb = new StringBuilder();
+        reader.lines().forEach(line -> {
+            sb.append(line);
+            sb.append(NEW_LINE);
+        });
+        reader.close();
+        return sb.toString();
+    }
+
+    /**
+     * Reads the full contents of the specified file line by line
+     * and returns them in a single {@link String}.
+     * This method is equivalent to <code>readFile(filename, null)</code>.
+     *
+     * @param filename the name of the file to read
+     * @return a {@link String} containing all the lines of the file
+     */
+    public static String readFile(final String filename) {
+        return readFile(filename, null);
+    }
+
+    private void defaultCatch(Exception e) {
+        if (l == null) {
+            e.printStackTrace();
+        } else {
+            l.log(e);
+        }
+    }
+
+    /**
      * Reads a line of text. A line is considered to be terminated by any one of a
      * linefeed ('\n'), a carriage return ('\r'), or a carriage return followed immediately by a linefeed.
      *
@@ -96,8 +132,7 @@ public class WrappedReader {
     public String readLine() {
         try {
             return reader.readLine();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             defaultCatch(e);
         }
         return null;
@@ -111,8 +146,7 @@ public class WrappedReader {
     public int read() {
         try {
             return reader.read();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             defaultCatch(e);
         }
         return -1;
@@ -125,13 +159,13 @@ public class WrappedReader {
      * @return The number of characters actually skipped
      */
     public long skip(long n) {
-        if (n < 0)
+        if (n < 0) {
             throw new IllegalArgumentException("Cannot skip a negative number of characters!");
+        }
 
         try {
             return reader.skip(n);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             defaultCatch(e);
         }
         return n;
@@ -146,8 +180,7 @@ public class WrappedReader {
     public boolean ready() {
         try {
             return reader.ready();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             defaultCatch(e);
         }
         return false;
@@ -168,8 +201,7 @@ public class WrappedReader {
     public void close() {
         try {
             reader.close();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             defaultCatch(e);
         }
     }
@@ -180,8 +212,7 @@ public class WrappedReader {
     public void reset() {
         try {
             reader.reset();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             defaultCatch(e);
         }
     }
@@ -199,8 +230,7 @@ public class WrappedReader {
     public void mark(int readAheadLimit) {
         try {
             reader.mark(readAheadLimit);
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             defaultCatch(e);
         }
     }
@@ -213,4 +243,5 @@ public class WrappedReader {
     public boolean markSupported() {
         return reader.markSupported();
     }
+
 }

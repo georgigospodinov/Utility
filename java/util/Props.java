@@ -1,9 +1,7 @@
 package util;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.util.HashMap;
+import java.io.*;
+import java.util.*;
 
 /**
  * Provides reading of ".props" files.
@@ -12,16 +10,30 @@ import java.util.HashMap;
  */
 public class Props {
 
-    private final HashMap<String, String> STRING_PROPERTIES = new HashMap<>();
-    private final HashMap<String, Long> LONG_PROPERTIES = new HashMap<>();
-    private final HashMap<String, Integer> INT_PROPERTIES = new HashMap<>();
-    private final HashMap<String, Double> DOUBLE_PROPERTIES = new HashMap<>();
-    private final HashMap<String, Float> FLOAT_PROPERTIES = new HashMap<>();
     private static final String DEFAULT_PROPS_FILE = "default.props";
     private static final String KEY_VALUE_SEPARATOR = "=";
     private static final String COMMENT_SYMBOL = "#";
     private static final int KEY_INDEX = 0;
     private static final int VALUE_INDEX = 1;
+    private final HashMap<String, String> STRING_PROPERTIES = new HashMap<>();
+    private final HashMap<String, Long> LONG_PROPERTIES = new HashMap<>();
+    private final HashMap<String, Integer> INT_PROPERTIES = new HashMap<>();
+    private final HashMap<String, Double> DOUBLE_PROPERTIES = new HashMap<>();
+    private final HashMap<String, Float> FLOAT_PROPERTIES = new HashMap<>();
+
+    public Props() {
+    }
+
+    public Props(String filename) throws FileNotFoundException {
+        BufferedReader reader;
+        try {
+            reader = new BufferedReader(new FileReader(filename));
+        } catch (FileNotFoundException e) {
+            throw new FileNotFoundException("Could not find props file \"" + filename + "\"");
+        }
+
+        reader.lines().forEach(this::loadLine);
+    }
 
     /**
      * Gives the number of properties currently in storage.
@@ -55,8 +67,9 @@ public class Props {
      * @return the integer value associated with that property
      */
     public int getInt(String property) {
-        if (!INT_PROPERTIES.containsKey(property))
+        if (!INT_PROPERTIES.containsKey(property)) {
             throw new NullPointerException("No integer property \"" + property + "\"");
+        }
 
         return INT_PROPERTIES.get(property);
     }
@@ -70,8 +83,9 @@ public class Props {
      */
     public long getLong(String property) {
         if (!LONG_PROPERTIES.containsKey(property)) {
-            if (!INT_PROPERTIES.containsKey(property))
+            if (!INT_PROPERTIES.containsKey(property)) {
                 throw new NullPointerException("No long property \"" + property + "\"");
+            }
             return INT_PROPERTIES.get(property);
         }
 
@@ -85,8 +99,9 @@ public class Props {
      * @return the double value associated with that property
      */
     public float getFloat(String property) {
-        if (!FLOAT_PROPERTIES.containsKey(property))
+        if (!FLOAT_PROPERTIES.containsKey(property)) {
             throw new NullPointerException("No float property \"" + property + "\"");
+        }
 
         return FLOAT_PROPERTIES.get(property);
     }
@@ -100,8 +115,9 @@ public class Props {
      */
     public double getDouble(String property) {
         if (!DOUBLE_PROPERTIES.containsKey(property)) {
-            if (!FLOAT_PROPERTIES.containsKey(property))
+            if (!FLOAT_PROPERTIES.containsKey(property)) {
                 throw new NullPointerException("No double property \"" + property + "\"");
+            }
             return FLOAT_PROPERTIES.get(property);
         }
 
@@ -117,17 +133,21 @@ public class Props {
      * @return the value associated with that property after being cast to integer.
      */
     public int getAnyInt(String property) {
-        if (INT_PROPERTIES.containsKey(property))
+        if (INT_PROPERTIES.containsKey(property)) {
             return INT_PROPERTIES.get(property);
+        }
 
-        if (LONG_PROPERTIES.containsKey(property))
+        if (LONG_PROPERTIES.containsKey(property)) {
             return LONG_PROPERTIES.get(property).intValue();
+        }
 
-        if (FLOAT_PROPERTIES.containsKey(property))
+        if (FLOAT_PROPERTIES.containsKey(property)) {
             return FLOAT_PROPERTIES.get(property).intValue();
+        }
 
-        if (DOUBLE_PROPERTIES.containsKey(property))
+        if (DOUBLE_PROPERTIES.containsKey(property)) {
             return DOUBLE_PROPERTIES.get(property).intValue();
+        }
 
         throw new NullPointerException("No number property \"" + property + "\"");
     }
@@ -139,8 +159,9 @@ public class Props {
      * @return true if and only if the String associated with this property is equal to "true".
      */
     public boolean isTrue(String property) {
-        if (!STRING_PROPERTIES.containsKey(property))
+        if (!STRING_PROPERTIES.containsKey(property)) {
             throw new NullPointerException("No string property \"" + property + "\"");
+        }
 
         return STRING_PROPERTIES.get(property).equals("true");
     }
@@ -152,8 +173,9 @@ public class Props {
      * @return the string value associated with that property
      */
     public String getString(String property) {
-        if (!STRING_PROPERTIES.containsKey(property))
+        if (!STRING_PROPERTIES.containsKey(property)) {
             throw new NullPointerException("No string property \"" + property + "\"");
+        }
 
         return STRING_PROPERTIES.get(property);
     }
@@ -173,23 +195,7 @@ public class Props {
         BufferedReader reader;
         try {
             reader = new BufferedReader(new FileReader(filename));
-        }
-        catch (FileNotFoundException e) {
-            throw new FileNotFoundException("Could not find props file \"" + filename + "\"");
-        }
-
-        reader.lines().forEach(this::loadLine);
-    }
-
-    public Props() {
-    }
-
-    public Props(String filename) throws FileNotFoundException {
-        BufferedReader reader;
-        try {
-            reader = new BufferedReader(new FileReader(filename));
-        }
-        catch (FileNotFoundException e) {
+        } catch (FileNotFoundException e) {
             throw new FileNotFoundException("Could not find props file \"" + filename + "\"");
         }
 
@@ -198,7 +204,9 @@ public class Props {
 
     private void loadLine(String line) {
         // Skip empty lines and comments
-        if (line.isEmpty() || line.startsWith(COMMENT_SYMBOL)) return;
+        if (line.isEmpty() || line.startsWith(COMMENT_SYMBOL)) {
+            return;
+        }
 
         String[] kv = line.split(KEY_VALUE_SEPARATOR);
         String key = kv[KEY_INDEX];
@@ -208,39 +216,38 @@ public class Props {
             int value = Integer.parseInt(val);
             INT_PROPERTIES.put(key, value);
             return;
-        }
-        catch (NumberFormatException ignored) {
+        } catch (NumberFormatException ignored) {
         }
 
         try {  // Is this a long?
             long value = Long.parseLong(val);
             LONG_PROPERTIES.put(key, value);
             return;
-        }
-        catch (NumberFormatException ignored) {
+        } catch (NumberFormatException ignored) {
         }
 
         try {  // Is this a float?
             float value = Float.parseFloat(val);
-            if (value == Float.POSITIVE_INFINITY)
+            if (value == Float.POSITIVE_INFINITY) {
                 throw new NumberFormatException();
-            if (value == Float.NEGATIVE_INFINITY)
+            }
+            if (value == Float.NEGATIVE_INFINITY) {
                 throw new NumberFormatException();
+            }
             FLOAT_PROPERTIES.put(key, value);
             return;
-        }
-        catch (NumberFormatException ignored) {
+        } catch (NumberFormatException ignored) {
         }
 
         try {  // Is this a double?
             double value = Double.parseDouble(val);
             DOUBLE_PROPERTIES.put(key, value);
             return;
-        }
-        catch (NumberFormatException ignored) {
+        } catch (NumberFormatException ignored) {
         }
 
         STRING_PROPERTIES.put(key, val);
 
     }
+
 }

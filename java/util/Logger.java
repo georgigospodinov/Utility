@@ -27,7 +27,8 @@ public class Logger {
 
     /**
      * Opens a file to log to.
-     * Starts a thread to periodically flush the log, so that if the main process crashes, some log remains.
+     * Starts a thread to periodically flush the log, so that
+     * if the main process crashes, some log remains.
      *
      * @param filename the name of the file to use for logging
      */
@@ -37,12 +38,11 @@ public class Logger {
         new Thread(this::periodicFlush).start();
     }
 
-    /**
-     * Closes the logger.
-     */
+    /** Closes the logger. */
     public void close() {
         writer.close();
-        contentsUpdated = false;  // Closing causes a flush, so periodicFlush knows not to flush.
+        // Closing causes a flush, so periodicFlush knows not to flush.
+        contentsUpdated = false;
         running = false;
     }
 
@@ -58,15 +58,17 @@ public class Logger {
 
     /**
      * Writes the given {@link Throwable}'s description and then
-     * the {@link StackTraceElement}s of the given {@link Throwable} to the log file.
+     * the {@link StackTraceElement}s of
+     * the given {@link Throwable} to the log file.
      *
      * @param t {@link Throwable} to log
      */
     public void log(Throwable t) {
         log(t.toString());
         StackTraceElement[] stack = t.getStackTrace();
-        for (StackTraceElement element : stack)
+        for (StackTraceElement element : stack) {
             log("\t" + element.toString());
+        }
     }
 
     /**
@@ -78,13 +80,15 @@ public class Logger {
         while (running) {
             try {
                 Thread.sleep(FLUSH_PERIOD);
-            }
-            catch (InterruptedException ignored) {
+            } catch (InterruptedException ignored) {
             }
 
-            if (!contentsUpdated) continue;
+            if (!contentsUpdated) {
+                continue;
+            }
             writer.flush();
             contentsUpdated = false;
         }
     }
+
 }
