@@ -7,8 +7,10 @@ package util;
  */
 public class Logger {
 
-    private static final int FLUSH_PERIOD = 5000;//ms
+    /** The log file flush period in milliseconds. */
+    private static final int FLUSH_PERIOD = 5000;
 
+    /** The {@link WrappedWriter} object used to access the log file. */
     private WrappedWriter writer;
 
     /**
@@ -32,7 +34,7 @@ public class Logger {
      *
      * @param filename the name of the file to use for logging
      */
-    public Logger(String filename) {
+    public Logger(final String filename) {
         writer = new WrappedWriter(filename);
         running = true;
         new Thread(this::periodicFlush).start();
@@ -51,7 +53,7 @@ public class Logger {
      *
      * @param line line to write
      */
-    public void log(String line) {
+    public void log(final String line) {
         writer.writeLine(line);
         contentsUpdated = true;
     }
@@ -63,7 +65,7 @@ public class Logger {
      *
      * @param t {@link Throwable} to log
      */
-    public void log(Throwable t) {
+    public void log(final Throwable t) {
         log(t.toString());
         StackTraceElement[] stack = t.getStackTrace();
         for (StackTraceElement element : stack) {
