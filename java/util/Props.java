@@ -1,38 +1,56 @@
 package util;
 
-import java.io.*;
-import java.util.*;
+import java.io.FileNotFoundException;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.HashMap;
 
 /**
  * Provides reading of ".props" files.
  *
- * @version 2.0
+ * @version 2.2
  */
 public class Props {
 
+    /** The name of the default properties file. */
     private static final String DEFAULT_PROPS_FILE = "default.props";
-    private static final String KEY_VALUE_SEPARATOR = "=";
-    private static final String COMMENT_SYMBOL = "#";
-    private static final int KEY_INDEX = 0;
-    private static final int VALUE_INDEX = 1;
-    private final HashMap<String, String> STRING_PROPERTIES = new HashMap<>();
-    private final HashMap<String, Long> LONG_PROPERTIES = new HashMap<>();
-    private final HashMap<String, Integer> INT_PROPERTIES = new HashMap<>();
-    private final HashMap<String, Double> DOUBLE_PROPERTIES = new HashMap<>();
-    private final HashMap<String, Float> FLOAT_PROPERTIES = new HashMap<>();
 
+    /** The symbol used to separate keys from values in the properties file. */
+    private static final String KEY_VALUE_SEPARATOR = "=";
+
+    /** The symbol that indicates a comment in the properties file. */
+    private static final String COMMENT_SYMBOL = "#";
+
+    /** The key index in the raw array of the key-value pair. */
+    private static final int KEY_INDEX = 0;
+
+    /** The value index in the raw array of the key-value pair. */
+    private static final int VALUE_INDEX = 1;
+
+    /** Stores properties that have {@link String} values. */
+    private final HashMap<String, String> stringProperties = new HashMap<>();
+    /** Stores properties that have {@link Long} values. */
+    private final HashMap<String, Long> longProperties = new HashMap<>();
+    /** Stores properties that have {@link Integer} values. */
+    private final HashMap<String, Integer> intProperties = new HashMap<>();
+    /** Stores properties that have {@link Double} values. */
+    private final HashMap<String, Double> doubleProperties = new HashMap<>();
+    /** Stores properties that have {@link Float} values. */
+    private final HashMap<String, Float> floatProperties = new HashMap<>();
+
+    /** Default constructor. A file should be loaded immediately. */
     public Props() {
     }
 
-    public Props(String filename) throws FileNotFoundException {
-        BufferedReader reader;
-        try {
-            reader = new BufferedReader(new FileReader(filename));
-        } catch (FileNotFoundException e) {
-            throw new FileNotFoundException("Could not find props file \"" + filename + "\"");
-        }
-
-        reader.lines().forEach(this::loadLine);
+    /**
+     * Creates a {@link Props} instance and
+     * loads the properties from the specified file.
+     *
+     * @param filename the name of the properties file to load
+     * @throws FileNotFoundException if the specified file is not found
+     */
+    public Props(final String filename) throws FileNotFoundException {
+        load(filename);
     }
 
     /**
@@ -41,23 +59,21 @@ public class Props {
      * @return the current number of properties
      */
     public int size() {
-        int ss = STRING_PROPERTIES.size();
-        int is = INT_PROPERTIES.size();
-        int ls = LONG_PROPERTIES.size();
-        int ds = DOUBLE_PROPERTIES.size();
-        int fs = FLOAT_PROPERTIES.size();
+        int ss = stringProperties.size();
+        int is = intProperties.size();
+        int ls = longProperties.size();
+        int ds = doubleProperties.size();
+        int fs = floatProperties.size();
         return ss + is + ls + ds + fs;
     }
 
-    /**
-     * Clears all the loaded properties.
-     */
+    /** Clears all the loaded properties. */
     public void clear() {
-        STRING_PROPERTIES.clear();
-        INT_PROPERTIES.clear();
-        LONG_PROPERTIES.clear();
-        FLOAT_PROPERTIES.clear();
-        DOUBLE_PROPERTIES.clear();
+        stringProperties.clear();
+        intProperties.clear();
+        longProperties.clear();
+        floatProperties.clear();
+        doubleProperties.clear();
     }
 
     /**
@@ -66,12 +82,13 @@ public class Props {
      * @param property the property to look for
      * @return the integer value associated with that property
      */
-    public int getInt(String property) {
-        if (!INT_PROPERTIES.containsKey(property)) {
-            throw new NullPointerException("No integer property \"" + property + "\"");
+    public int getInt(final String property) {
+        if (!intProperties.containsKey(property)) {
+            String message = "No integer property \"" + property + "\"";
+            throw new NullPointerException(message);
         }
 
-        return INT_PROPERTIES.get(property);
+        return intProperties.get(property);
     }
 
     /**
@@ -81,15 +98,16 @@ public class Props {
      * @param property the property to look for
      * @return the long value associated with that property
      */
-    public long getLong(String property) {
-        if (!LONG_PROPERTIES.containsKey(property)) {
-            if (!INT_PROPERTIES.containsKey(property)) {
-                throw new NullPointerException("No long property \"" + property + "\"");
+    public long getLong(final String property) {
+        if (!longProperties.containsKey(property)) {
+            if (!intProperties.containsKey(property)) {
+                String message = "No long property \"" + property + "\"";
+                throw new NullPointerException(message);
             }
-            return INT_PROPERTIES.get(property);
+            return intProperties.get(property);
         }
 
-        return LONG_PROPERTIES.get(property);
+        return longProperties.get(property);
     }
 
     /**
@@ -98,12 +116,13 @@ public class Props {
      * @param property the property to look for
      * @return the double value associated with that property
      */
-    public float getFloat(String property) {
-        if (!FLOAT_PROPERTIES.containsKey(property)) {
-            throw new NullPointerException("No float property \"" + property + "\"");
+    public float getFloat(final String property) {
+        if (!floatProperties.containsKey(property)) {
+            String message = "No float property \"" + property + "\"";
+            throw new NullPointerException(message);
         }
 
-        return FLOAT_PROPERTIES.get(property);
+        return floatProperties.get(property);
     }
 
     /**
@@ -113,57 +132,64 @@ public class Props {
      * @param property the property to look for
      * @return the long value associated with that property
      */
-    public double getDouble(String property) {
-        if (!DOUBLE_PROPERTIES.containsKey(property)) {
-            if (!FLOAT_PROPERTIES.containsKey(property)) {
-                throw new NullPointerException("No double property \"" + property + "\"");
+    public double getDouble(final String property) {
+        if (!doubleProperties.containsKey(property)) {
+            if (!floatProperties.containsKey(property)) {
+                String message = "No double property \"" + property + "\"";
+                throw new NullPointerException(message);
             }
-            return FLOAT_PROPERTIES.get(property);
+            return floatProperties.get(property);
         }
 
-        return DOUBLE_PROPERTIES.get(property);
+        return doubleProperties.get(property);
     }
 
     /**
      * Get the number associated with the given property.
-     * This method checks for a {@link Integer}, {@link Long}, {@link Float}, and {@link Double} in this order.
+     * This method checks for an {@link Integer}, {@link Long}, {@link Float},
+     * and {@link Double} in this order.
      * Once found, it is cast to integer and returned.
      *
      * @param property the property to look for
-     * @return the value associated with that property after being cast to integer.
+     * @return the value associated with that property
+     * after being cast to integer
      */
-    public int getAnyInt(String property) {
-        if (INT_PROPERTIES.containsKey(property)) {
-            return INT_PROPERTIES.get(property);
+    public int getAnyInt(final String property) {
+        if (intProperties.containsKey(property)) {
+            return intProperties.get(property);
         }
 
-        if (LONG_PROPERTIES.containsKey(property)) {
-            return LONG_PROPERTIES.get(property).intValue();
+        if (longProperties.containsKey(property)) {
+            return longProperties.get(property).intValue();
         }
 
-        if (FLOAT_PROPERTIES.containsKey(property)) {
-            return FLOAT_PROPERTIES.get(property).intValue();
+        if (floatProperties.containsKey(property)) {
+            return floatProperties.get(property).intValue();
         }
 
-        if (DOUBLE_PROPERTIES.containsKey(property)) {
-            return DOUBLE_PROPERTIES.get(property).intValue();
+        if (doubleProperties.containsKey(property)) {
+            return doubleProperties.get(property).intValue();
         }
 
-        throw new NullPointerException("No number property \"" + property + "\"");
+        String message = "No number property \"" + property + "\"";
+        throw new NullPointerException(message);
     }
 
     /**
-     * Checks if the String associated with the given property is equal to "true".
+     * Checks if the {@link String} associated with the given property
+     * is equal to "true".
      *
      * @param property the property to look for
-     * @return true if and only if the String associated with this property is equal to "true".
+     * @return true if and only if the {@link String}
+     * associated with this property is equal to "true".
      */
-    public boolean isTrue(String property) {
-        if (!STRING_PROPERTIES.containsKey(property)) {
-            throw new NullPointerException("No string property \"" + property + "\"");
+    public boolean isTrue(final String property) {
+        if (!stringProperties.containsKey(property)) {
+            String message = "No string property \"" + property + "\"";
+            throw new NullPointerException(message);
         }
 
-        return STRING_PROPERTIES.get(property).equals("true");
+        return stringProperties.get(property).equals("true");
     }
 
     /**
@@ -172,14 +198,21 @@ public class Props {
      * @param property the property to look for
      * @return the string value associated with that property
      */
-    public String getString(String property) {
-        if (!STRING_PROPERTIES.containsKey(property)) {
-            throw new NullPointerException("No string property \"" + property + "\"");
+    public String getString(final String property) {
+        if (!stringProperties.containsKey(property)) {
+            String message = "No string property \"" + property + "\"";
+            throw new NullPointerException(message);
         }
 
-        return STRING_PROPERTIES.get(property);
+        return stringProperties.get(property);
     }
 
+    /**
+     * Loads the default properties file.
+     *
+     * @throws FileNotFoundException if the default properties file is not found
+     * @see Props#DEFAULT_PROPS_FILE
+     */
     public void load() throws FileNotFoundException {
         load(DEFAULT_PROPS_FILE);
     }
@@ -191,18 +224,29 @@ public class Props {
      *                 This can be absolute or relative path.
      * @throws FileNotFoundException if there is no file with the given name
      */
-    public void load(String filename) throws FileNotFoundException {
+    public void load(final String filename) throws FileNotFoundException {
         BufferedReader reader;
         try {
             reader = new BufferedReader(new FileReader(filename));
         } catch (FileNotFoundException e) {
-            throw new FileNotFoundException("Could not find props file \"" + filename + "\"");
+            String message = "Could not find props file \"" + filename + "\"";
+            throw new FileNotFoundException(message);
         }
 
         reader.lines().forEach(this::loadLine);
     }
 
-    private void loadLine(String line) {
+    /**
+     * Parses the specified line as a key-value property.
+     * The line should contain two Strings separated by the
+     * {@link Props#KEY_VALUE_SEPARATOR}.
+     * If the separator appears multiple times in the line,
+     * the string before the first separator will be used as key
+     * and the string between the first and second separator - as value.
+     *
+     * @param line the line to parse
+     */
+    private void loadLine(final String line) {
         // Skip empty lines and comments
         if (line.isEmpty() || line.startsWith(COMMENT_SYMBOL)) {
             return;
@@ -214,14 +258,14 @@ public class Props {
 
         try {  // Is this an integer?
             int value = Integer.parseInt(val);
-            INT_PROPERTIES.put(key, value);
+            intProperties.put(key, value);
             return;
         } catch (NumberFormatException ignored) {
         }
 
         try {  // Is this a long?
             long value = Long.parseLong(val);
-            LONG_PROPERTIES.put(key, value);
+            longProperties.put(key, value);
             return;
         } catch (NumberFormatException ignored) {
         }
@@ -234,19 +278,19 @@ public class Props {
             if (value == Float.NEGATIVE_INFINITY) {
                 throw new NumberFormatException();
             }
-            FLOAT_PROPERTIES.put(key, value);
+            floatProperties.put(key, value);
             return;
         } catch (NumberFormatException ignored) {
         }
 
         try {  // Is this a double?
             double value = Double.parseDouble(val);
-            DOUBLE_PROPERTIES.put(key, value);
+            doubleProperties.put(key, value);
             return;
         } catch (NumberFormatException ignored) {
         }
 
-        STRING_PROPERTIES.put(key, val);
+        stringProperties.put(key, val);
 
     }
 
