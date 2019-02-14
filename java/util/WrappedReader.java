@@ -1,28 +1,38 @@
 package util;
 
-import java.io.*;
-import java.util.stream.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.stream.Stream;
 
-import static util.PrintFormatting.*;
+import static util.PrintFormatting.NEW_LINE;
 
 /**
- * Wraps {@link BufferedReader}, so that methods can be called without having to try-catch.
+ * Wraps {@link BufferedReader}, so that
+ * methods can be called without having to try-catch.
  *
- * @version 1.2
+ * @version 1.3
  */
 public class WrappedReader {
 
+    /** A {@link Logger} to write all errors to. */
     private Logger l;
+
+    /** The wrapped {@link BufferedReader} instance. */
     private BufferedReader reader;
 
     /**
      * Opens a {@link BufferedReader} to the given filename.
      *
      * @param filename filename of input file
-     * @param l        {@link Logger} to be used for logging {@link IOException}s.
+     * @param logger        {@link Logger} to be used for logging
+     * {@link IOException}s.
      */
-    public WrappedReader(String filename, Logger l) {
-        this.l = l;
+    public WrappedReader(final String filename, final Logger logger) {
+        this.l = logger;
         try {
             reader = new BufferedReader(new FileReader(filename));
         } catch (FileNotFoundException e) {
@@ -33,11 +43,13 @@ public class WrappedReader {
     /**
      * Opens a {@link BufferedReader} to the given filename.
      * {@link IOException}s will be printed to standard error.
-     * This is equivalent to using {@link WrappedReader#WrappedReader(String, Logger)} with null as the second argument.
+     * This is equivalent to using
+     * {@link WrappedReader#WrappedReader(String, Logger)} with null
+     * as the second argument.
      *
      * @param filename filename of input file
      */
-    public WrappedReader(String filename) {
+    public WrappedReader(final String filename) {
         this(filename, null);
     }
 
@@ -45,39 +57,45 @@ public class WrappedReader {
      * Opens a {@link BufferedReader} to the given {@link InputStream}.
      *
      * @param in {@link InputStream} to read
-     * @param l  {@link Logger} used for logging {@link IOException}s.
+     * @param logger  {@link Logger} used for logging {@link IOException}s.
      */
-    public WrappedReader(InputStream in, Logger l) {
-        this.l = l;
+    public WrappedReader(final InputStream in, final Logger logger) {
+        this.l = logger;
         reader = new BufferedReader(new InputStreamReader(in));
     }
 
     /**
      * Opens a {@link BufferedReader} to the given {@link InputStream}.
      * {@link IOException}s will be printed to standard error.
-     * This is equivalent to using {@link WrappedReader#WrappedReader(InputStream, Logger)} with null as the second argument.
+     * This is equivalent to using
+     * {@link WrappedReader#WrappedReader(InputStream, Logger)} with null
+     * as the second argument.
      *
      * @param in {@link InputStream} to read
      */
-    public WrappedReader(InputStream in) {
+    public WrappedReader(final InputStream in) {
         this(in, null);
     }
 
     /**
      * Opens a {@link BufferedReader} to {@link System#in}.
-     * This is equivalent to using {@link WrappedReader#WrappedReader(InputStream, Logger)} with {@link System#in} as the first argument.
+     * This is equivalent to using
+     * {@link WrappedReader#WrappedReader(InputStream, Logger)} with
+     * {@link System#in} as the first argument.
      *
-     * @param l {@link Logger} to be used for logging {@link IOException}s.
+     * @param logger {@link Logger} to be used for logging {@link IOException}s.
      */
-    public WrappedReader(Logger l) {
-        this(System.in, l);
+    public WrappedReader(final Logger logger) {
+        this(System.in, logger);
     }
 
     /**
      * Opens a {@link BufferedReader} to {@link System#in}.
      * {@link IOException}s will be printed to standard error.
      *
-     * This is equivalent to using {@link WrappedReader#WrappedReader(InputStream)} with {@link System#in} as the argument.
+     * This is equivalent to using
+     * {@link WrappedReader#WrappedReader(InputStream)} with
+     * {@link System#in} as the argument.
      */
     public WrappedReader() {
         this(System.in);
@@ -114,7 +132,12 @@ public class WrappedReader {
         return readFile(filename, null);
     }
 
-    private void defaultCatch(Exception e) {
+    /**
+     * The default behaviour for caught {@link Exception}s.
+     *
+     * @param e the caught {@link Exception}
+     */
+    private void defaultCatch(final Exception e) {
         if (l == null) {
             e.printStackTrace();
         } else {
@@ -123,10 +146,12 @@ public class WrappedReader {
     }
 
     /**
-     * Reads a line of text. A line is considered to be terminated by any one of a
-     * linefeed ('\n'), a carriage return ('\r'), or a carriage return followed immediately by a linefeed.
+     * Reads a line of text. A line is considered to be terminated by any
+     * one of a linefeed ('\n'), a carriage return ('\r'), or
+     * a carriage return followed immediately by a linefeed.
      *
-     * @return A String containing the contents of the line, not including any line-termination characters,
+     * @return A String containing the contents of the line,
+     * not including any line-termination characters,
      * or null if the end of the stream has been reached
      */
     public String readLine() {
@@ -141,7 +166,9 @@ public class WrappedReader {
     /**
      * Reads a single character. (Unicode?)
      *
-     * @return The character read, as an integer in the range 0 to 65535 (0x00-0xffff), or -1 if the end of the stream has been reached
+     * @return the character read, as an integer in the range
+     * 0 to 65535 (0x00-0xffff),
+     * or -1 if the end of the stream has been reached
      */
     public int read() {
         try {
@@ -158,9 +185,10 @@ public class WrappedReader {
      * @param n The number of characters to skip
      * @return The number of characters actually skipped
      */
-    public long skip(long n) {
+    public long skip(final long n) {
         if (n < 0) {
-            throw new IllegalArgumentException("Cannot skip a negative number of characters!");
+            String message = "Cannot skip a negative number of characters!";
+            throw new IllegalArgumentException(message);
         }
 
         try {
@@ -173,9 +201,12 @@ public class WrappedReader {
 
     /**
      * Tells whether this stream is ready to be read.
-     * A buffered character stream is ready if the buffer is not empty, or if the underlying character stream is ready.
+     * A buffered character stream is ready if the buffer is not empty,
+     * or if the underlying character stream is ready.
      *
-     * @return True if the next read() is guaranteed not to block for input, false otherwise. Note that returning false does not guarantee that the next read will block.
+     * @return True if the next read() is guaranteed not to block for input,
+     * false otherwise. Note that returning false does not guarantee
+     * that the next read will block.
      */
     public boolean ready() {
         try {
@@ -187,9 +218,11 @@ public class WrappedReader {
     }
 
     /**
-     * Returns a Stream, the elements of which are lines read from this {@link WrappedReader}.
+     * Returns a Stream, the elements of which are lines
+     * read from this {@link WrappedReader}.
      *
-     * @return a Stream<String> providing the lines of text described by this {@link WrappedReader}
+     * @return a Stream<String> providing the lines of text
+     * described by this {@link WrappedReader}
      */
     public Stream<String> lines() {
         return reader.lines();
@@ -206,9 +239,7 @@ public class WrappedReader {
         }
     }
 
-    /**
-     * Resets the stream to the most recent mark.
-     */
+    /** Resets the stream to the most recent mark. */
     public void reset() {
         try {
             reader.reset();
@@ -219,15 +250,19 @@ public class WrappedReader {
 
     /**
      * Marks the present position in the stream.
-     * Subsequent calls to reset() will attempt to reposition the stream to this point.
+     * Subsequent calls to reset() will attempt to
+     * reposition the stream to this point.
      *
-     * @param readAheadLimit Limit on the number of characters that may be read while still preserving the mark.
-     *                       An attempt to reset the stream after reading characters up to this limit or beyond may fail.
-     *                       A limit value larger than the size of the input buffer
-     *                       will cause a new buffer to be allocated whose size is no smaller than limit.
+     * @param readAheadLimit Limit on the number of characters that
+     *                       may be read while still preserving the mark.
+     *                       An attempt to reset the stream after reading
+     *                       characters up to this limit or beyond may fail.
+     *                       A limit value larger than the size of the
+     *                       input buffer will cause a new buffer to be
+     *                       allocated whose size is no smaller than limit.
      *                       Therefore large values should be used with care.
      */
-    public void mark(int readAheadLimit) {
+    public void mark(final int readAheadLimit) {
         try {
             reader.mark(readAheadLimit);
         } catch (IOException e) {
