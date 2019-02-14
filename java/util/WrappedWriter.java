@@ -1,25 +1,31 @@
 package util;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 
 /**
- * Wraps {@link BufferedWriter}, so that methods can be called without having to try-catch.
+ * Wraps {@link BufferedWriter}, so that
+ * methods can be called without having to try-catch.
  *
  * @version 1.1
  */
 public class WrappedWriter {
 
+    /** A {@link Logger} to write all errors to. */
     private Logger l;
+
+    /** The wrapped {@link BufferedWriter} instance. */
     private BufferedWriter writer;
 
     /**
      * Opens a {@link BufferedWriter} to the given filename.
      *
      * @param filename filename of output file
-     * @param l        {@link Logger} used for logging {@link IOException}s.
+     * @param logger        {@link Logger} used for logging {@link IOException}s
      */
-    public WrappedWriter(String filename, Logger l) {
-        this.l = l;
+    public WrappedWriter(final String filename, final Logger logger) {
+        this.l = logger;
         try {
             writer = new BufferedWriter(new FileWriter(filename));
         } catch (IOException e) {
@@ -30,11 +36,13 @@ public class WrappedWriter {
     /**
      * Opens a {@link BufferedWriter} to the given filename.
      * {@link IOException}s will be printed to standard error.
-     * This is equivalent to using {@link WrappedWriter#WrappedWriter(String, Logger)} with null as the second argument.
+     * This is equivalent to using
+     * {@link WrappedWriter#WrappedWriter(String, Logger)} with null
+     * as the second argument.
      *
      * @param filename filename of output file
      */
-    public WrappedWriter(String filename) {
+    public WrappedWriter(final String filename) {
         this(filename, null);
     }
 
@@ -71,7 +79,12 @@ public class WrappedWriter {
         saveToFile(text, filename, null);
     }
 
-    private void defaultCatch(Exception e) {
+    /**
+     * The default behaviour for caught {@link Exception}s.
+     *
+     * @param e the caught {@link Exception}
+     */
+    private void defaultCatch(final Exception e) {
         if (l == null) {
             e.printStackTrace();
         } else {
@@ -84,7 +97,7 @@ public class WrappedWriter {
      *
      * @param s String to be written
      */
-    public void write(String s) {
+    public void write(final String s) {
         try {
             writer.write(s);
         } catch (IOException e) {
@@ -99,7 +112,7 @@ public class WrappedWriter {
      *
      * @param s String to be written
      */
-    public void writeLine(String s) {
+    public void writeLine(final String s) {
         write(s);
         newLine();
     }
@@ -109,7 +122,7 @@ public class WrappedWriter {
      *
      * @param c the character to be written
      */
-    public void write(int c) {
+    public void write(final int c) {
         try {
             writer.write(c);
         } catch (IOException e) {
@@ -119,7 +132,8 @@ public class WrappedWriter {
 
     /**
      * Writes a line separator.
-     * The line separator string is defined by the system property line.separator,
+     * The line separator string is defined by
+     * the system property line.separator,
      * and is not necessarily a single newline ('\n') character.
      */
     public void newLine() {
