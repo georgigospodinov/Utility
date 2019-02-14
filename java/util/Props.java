@@ -1,14 +1,18 @@
 package util;
 
+import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.BufferedReader;
-import java.io.FileReader;
+
 import java.util.HashMap;
+import java.util.Scanner;
+import java.util.NoSuchElementException;
+
+import static util.PrintFormatting.NEW_LINE;
 
 /**
  * Provides reading of ".props" files.
  *
- * @version 2.2
+ * @version 2.3
  */
 public class Props {
 
@@ -29,12 +33,16 @@ public class Props {
 
     /** Stores properties that have {@link String} values. */
     private final HashMap<String, String> stringProperties = new HashMap<>();
+
     /** Stores properties that have {@link Long} values. */
     private final HashMap<String, Long> longProperties = new HashMap<>();
+
     /** Stores properties that have {@link Integer} values. */
     private final HashMap<String, Integer> intProperties = new HashMap<>();
+
     /** Stores properties that have {@link Double} values. */
     private final HashMap<String, Double> doubleProperties = new HashMap<>();
+
     /** Stores properties that have {@link Float} values. */
     private final HashMap<String, Float> floatProperties = new HashMap<>();
 
@@ -225,15 +233,17 @@ public class Props {
      * @throws FileNotFoundException if there is no file with the given name
      */
     public void load(final String filename) throws FileNotFoundException {
-        BufferedReader reader;
-        try {
-            reader = new BufferedReader(new FileReader(filename));
-        } catch (FileNotFoundException e) {
-            String message = "Could not find props file \"" + filename + "\"";
-            throw new FileNotFoundException(message);
-        }
-
-        reader.lines().forEach(this::loadLine);
+        Scanner scanner = new Scanner(new File(filename), "utf-8");
+        scanner.useDelimiter(NEW_LINE);
+        String line;
+        do {
+            try {
+                line = scanner.nextLine();
+                loadLine(line);
+            } catch (NoSuchElementException e) {
+                break;
+            }
+        } while (true);
     }
 
     /**
