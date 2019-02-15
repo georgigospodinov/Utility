@@ -56,6 +56,6 @@ The Props class uses a HashMap to store all the loaded properties.
 Loads are cumulative. That is to say, loading multiple files will cause the Props class to store all properties.  
 Furthermore, if multiple loaded properties files contain the same key, only the latest value will be kept.  
 Use `Props.clear()` to remove all key-value entries.  
-The class provides a `Props.get(String property)` method to retrieve the value associated with a property  
+The class provides several `get` methods to retrieve the value associated with a property.
 and a `Props.size()` method to retrieve the number of properties currently loaded.  
  
