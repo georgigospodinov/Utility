@@ -15,7 +15,7 @@ import static util.PrintFormatting.NEW_LINE;
  * Wraps {@link BufferedReader}, so that
  * methods can be called without having to try-catch.
  *
- * @version 1.4
+ * @version 2.0
  */
 public class WrappedReader {
 
@@ -124,7 +124,6 @@ public class WrappedReader {
     /**
      * Reads the full contents of the specified file line by line
      * and returns them in a single {@link String}.
-     * This method is equivalent to <code>readFile(filename, null)</code>.
      *
      * @param filename the name of the file to read
      * @return a {@link String} containing all the lines of the file
