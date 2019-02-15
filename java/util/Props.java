@@ -306,14 +306,25 @@ public class Props {
     }
 
     /**
-     * Applies the specified operation to each integer property.
+     * Applies the specified operation to each {@link Integer} property.
      * The operation must accept a {@link String} (the key)
      * and an {@link Integer} (the value).
      *
      * @param operation the operation to apply
      */
-    public void forEachIntProp(final BiConsumer<String, Integer> operation) {
+    public void forEachInteger(final BiConsumer<String, Integer> operation) {
         intProperties.forEach(operation);
+    }
+
+    /**
+     * Applies the specified operation to each {@link String} property.
+     * The operation must accept a {@link String} (the key)
+     * and a {@link String} (the value).
+     *
+     * @param operation the operation to apply
+     */
+    public void forEachString(final BiConsumer<String, String> operation) {
+        stringProperties.forEach(operation);
     }
 
 }

@@ -79,8 +79,8 @@ class PropsTest {
     }
 
     @Test
-    void testForEachIntProp() {
-        p.forEachIntProp((key, value) -> {
+    void testForEachInteger() {
+        p.forEachInteger((key, value) -> {
             switch (key) {
                 case "CONSTANT_ONE":
                     assertEquals(1, (int) value);
@@ -90,6 +90,23 @@ class PropsTest {
                     break;
                 case "my int":
                     assertEquals(2, (int) value);
+                    break;
+            }
+        });
+    }
+
+    @Test
+    void testForEachString() {
+        p.forEachString((key, value) -> {
+            switch (key) {
+                case "CONSTANT_HELLO":
+                    assertEquals("HELLO", value);
+                    break;
+                case "CONSTANT MULTI WORD STRING":
+                    assertEquals("Hello World!", value);
+                    break;
+                case "Hello in BG":
+                    assertEquals("Здравей!", value);
                     break;
             }
         });
