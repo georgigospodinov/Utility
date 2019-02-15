@@ -6,8 +6,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 import java.util.stream.Stream;
-import java.util.ArrayList;
 
 import static util.PrintFormatting.NEW_LINE;
 
@@ -130,7 +130,43 @@ public class WrappedReader {
      * @return a {@link String} containing all the lines of the file
      */
     public static String readFile(final String filename) {
-        return readFile(filename, null);
+        WrappedReader reader = new WrappedReader(filename, null);
+        StringBuilder sb = new StringBuilder();
+        reader.lines().forEach(line -> {
+            sb.append(line);
+            sb.append(NEW_LINE);
+        });
+        reader.close();
+        return sb.toString();
+    }
+
+    /**
+     * Reads the full contents of the specified file line by line
+     * and adds them to the specified {@link List}.
+     *
+     * @param filename the name of the file to read
+     * @param list     the list to be filled
+     * @param l        {@link Logger} used for logging {@link IOException}s.
+     */
+    public static void readFile(final String filename,
+                                final List<String> list,
+                                final Logger l) {
+        WrappedReader reader = new WrappedReader(filename, l);
+        reader.lines().forEach(list::add);
+        reader.close();
+    }
+
+    /**
+     * Reads the full contents of the specified file line by line
+     * and adds them to the specified {@link List}.
+     * This method is equivalent to <code>readFile(filename, list, null)</code>.
+     *
+     * @param filename the name of the file to read
+     * @param list     the list to be filled
+     */
+    public static void readFile(final String filename,
+                                final List<String> list) {
+        readFile(filename, list, null);
     }
 
     /**
@@ -230,15 +266,13 @@ public class WrappedReader {
     }
 
     /**
-     * Returns an {@link java.util.ArrayList} with all the lines
-     * read from the invocation of {@link BufferedReader#lines()}.
+     * Fills the specified list with the lines of the {@link WrappedReader}.
+     * For each line, {@link List#add} is invoked.
      *
-     * @return the lines of the stream
+     * @param list the list to be filled
      */
-    public ArrayList<String> getLines() {
-        ArrayList<String> lines = new ArrayList<>();
-        reader.lines().forEach(lines::add);
-        return lines;
+    public void putLinesIn(final List<String> list) {
+        reader.lines().forEach(list::add);
     }
 
     /**
