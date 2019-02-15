@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.stream.Stream;
+import java.util.ArrayList;
 
 import static util.PrintFormatting.NEW_LINE;
 
@@ -14,7 +15,7 @@ import static util.PrintFormatting.NEW_LINE;
  * Wraps {@link BufferedReader}, so that
  * methods can be called without having to try-catch.
  *
- * @version 1.3
+ * @version 1.4
  */
 public class WrappedReader {
 
@@ -28,8 +29,8 @@ public class WrappedReader {
      * Opens a {@link BufferedReader} to the given filename.
      *
      * @param filename filename of input file
-     * @param logger        {@link Logger} to be used for logging
-     * {@link IOException}s.
+     * @param logger   {@link Logger} to be used for logging
+     *                 {@link IOException}s.
      */
     public WrappedReader(final String filename, final Logger logger) {
         this.l = logger;
@@ -56,8 +57,8 @@ public class WrappedReader {
     /**
      * Opens a {@link BufferedReader} to the given {@link InputStream}.
      *
-     * @param in {@link InputStream} to read
-     * @param logger  {@link Logger} used for logging {@link IOException}s.
+     * @param in     {@link InputStream} to read
+     * @param logger {@link Logger} used for logging {@link IOException}s.
      */
     public WrappedReader(final InputStream in, final Logger logger) {
         this.l = logger;
@@ -226,6 +227,18 @@ public class WrappedReader {
      */
     public Stream<String> lines() {
         return reader.lines();
+    }
+
+    /**
+     * Returns an {@link java.util.ArrayList} with all the lines
+     * read from the invocation of {@link BufferedReader#lines()}.
+     *
+     * @return the lines of the stream
+     */
+    public ArrayList<String> getLines() {
+        ArrayList<String> lines = new ArrayList<>();
+        reader.lines().forEach(lines::add);
+        return lines;
     }
 
     /**
