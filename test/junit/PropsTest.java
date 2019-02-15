@@ -77,4 +77,21 @@ class PropsTest {
         p.clear();
         assertEquals(p.size(), 0);
     }
+
+    @Test
+    void testForEachIntProp() {
+        p.forEachIntProp((key, value) -> {
+            switch (key) {
+                case "CONSTANT_ONE":
+                    assertEquals(1, (int) value);
+                    break;
+                case "NEGATIVE":
+                    assertEquals(-3, (int) value);
+                    break;
+                case "my int":
+                    assertEquals(2, (int) value);
+                    break;
+            }
+        });
+    }
 }

@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.Scanner;
 import java.util.NoSuchElementException;
+import java.util.function.BiConsumer;
 
 import static util.PrintFormatting.NEW_LINE;
 
@@ -302,6 +303,17 @@ public class Props {
 
         stringProperties.put(key, val);
 
+    }
+
+    /**
+     * Applies the specified operation to each integer property.
+     * The operation must accept a {@link String} (the key)
+     * and an {@link Integer} (the value).
+     *
+     * @param operation the operation to apply
+     */
+    public void forEachIntProp(final BiConsumer<String, Integer> operation) {
+        intProperties.forEach(operation);
     }
 
 }
