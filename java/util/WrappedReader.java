@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
+import java.util.ArrayList;
 import java.util.stream.Stream;
 
 import static util.PrintFormatting.NEW_LINE;
@@ -15,7 +16,7 @@ import static util.PrintFormatting.NEW_LINE;
  * Wraps {@link BufferedReader}, so that
  * methods can be called without having to try-catch.
  *
- * @version 2.0
+ * @version 2.1
  */
 public class WrappedReader {
 
@@ -145,7 +146,7 @@ public class WrappedReader {
      *
      * @param filename the name of the file to read
      * @param list     the list to be filled
-     * @param l        {@link Logger} used for logging {@link IOException}s.
+     * @param l        {@link Logger} used for logging {@link IOException}s
      */
     public static void readFile(final String filename,
                                 final List<String> list,
@@ -166,6 +167,33 @@ public class WrappedReader {
     public static void readFile(final String filename,
                                 final List<String> list) {
         readFile(filename, list, null);
+    }
+
+    /**
+     * Reads the full contents of the specified file line by line
+     * and stores them in an {@link ArrayList}.
+     *
+     * @param filename the name of the file to read
+     * @param l        {@link Logger} uesd for logging {@link IOException}s
+     * @return the list with all lines of the file
+     */
+    public static ArrayList<String> readFileLines(final String filename,
+                                                  final Logger l) {
+        ArrayList<String> lines = new ArrayList<>();
+        readFile(filename, lines, l);
+        return lines;
+    }
+
+    /**
+     * Reads the full contents of the specified file line by line
+     * and stores them in an {@link ArrayList}.
+     * This method is equivalent to <code>readFileLines(filename, null)</code>.
+     *
+     * @param filename the name of the file to read
+     * @return the list with all lines of the file
+     */
+    public static ArrayList<String> readFileLines(final String filename) {
+        return readFileLines(filename, null);
     }
 
     /**
