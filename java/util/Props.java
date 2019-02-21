@@ -1,5 +1,6 @@
 package util;
 
+import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 
@@ -214,6 +215,24 @@ public class Props {
         }
 
         return stringProperties.get(property);
+    }
+
+    /**
+     * Gets the {@link Color} described by the given property.
+     * Specifically, looks for the integer properties that specify
+     * the {@link Color} in RGB,
+     * then creates and returns the appropriate object.
+     * E.G.: <code>getColor("my color")</code> will look for properties
+     * "my color r", "my color g", and "my color b".
+     *
+     * @param property the property to look for
+     * @return the {@link Color} described by that property
+     */
+    public Color getColor(final String property) {
+        int red = getInt(property + " r");
+        int green = getInt(property + " g");
+        int blue = getInt(property + " b");
+        return new Color(red, green, blue);
     }
 
     /**

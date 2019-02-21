@@ -4,6 +4,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import util.Props;
 
+import java.awt.*;
 import java.io.FileNotFoundException;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -21,15 +22,15 @@ class PropsTest {
 
     @Test
     void testLoad() {
-        assertEquals(p.getString("CONSTANT_HELLO"), "HELLO");
-        assertEquals(p.getInt("CONSTANT_ONE"), 1);
-        assertEquals(p.getInt("NEGATIVE"), -3);
-        assertEquals(p.getDouble("CONSTANT_PI"), 3.14f);
-        assertEquals(p.getString("CONSTANT MULTI WORD STRING"), "Hello World!");
-        assertEquals(p.getString("Hello in BG"), "Здравей!");
-        assertEquals(p.getDouble("sample"), 1.0);
-        assertEquals(p.getFloat("sample"), 1.0);
-        assertEquals(p.size(), 12);
+        assertEquals("HELLO", p.getString("CONSTANT_HELLO"));
+        assertEquals(1, p.getInt("CONSTANT_ONE"));
+        assertEquals(-3, p.getInt("NEGATIVE"));
+        assertEquals(3.14f, p.getDouble("CONSTANT_PI"));
+        assertEquals("Hello World!", p.getString("CONSTANT MULTI WORD STRING"));
+        assertEquals("Здравей!", p.getString("Hello in BG"));
+        assertEquals(1.0, p.getDouble("sample"));
+        assertEquals(1.0, p.getFloat("sample"));
+        assertEquals(15, p.size());
     }
 
     @Test
@@ -43,26 +44,26 @@ class PropsTest {
 
     @Test
     void testIntLong() {
-        assertEquals(p.getInt("my int"), 2);
-        assertEquals(p.getLong("my long"), 9223372036854775807L);
-        assertEquals(p.getLong("my int"), 2);
+        assertEquals(2, p.getInt("my int"));
+        assertEquals(9223372036854775807L, p.getLong("my long"));
+        assertEquals(2, p.getLong("my int"));
         assertThrows(NullPointerException.class, () -> p.getInt("my long"));
     }
 
     @Test
     void testFloatDouble() {
-        assertEquals(p.getFloat("my float"), -0.3f);
-        assertEquals(p.getDouble("my float"), -0.3f);
-        assertEquals(p.getDouble("my double"), 1.797693E41);
+        assertEquals(-0.3f, p.getFloat("my float"));
+        assertEquals(-0.3f, p.getDouble("my float"));
+        assertEquals(1.797693E41, p.getDouble("my double"));
         assertThrows(NullPointerException.class, () -> p.getFloat("my double"));
     }
 
     @Test
     void testAnyNumber() {
-        assertEquals(p.getAnyInt("my int"), 2);
-        assertEquals(p.getAnyInt("my long"), (int) 9223372036854775807L);
-        assertEquals(p.getAnyInt("my float"), 0);
-        assertEquals(p.getAnyInt("my double"), (int) 1.797693E41);
+        assertEquals(2, p.getAnyInt("my int"));
+        assertEquals((int) 9223372036854775807L, p.getAnyInt("my long"));
+        assertEquals(0, p.getAnyInt("my float"));
+        assertEquals((int) 1.797693E41, p.getAnyInt("my double"));
     }
 
     @Test
@@ -73,9 +74,15 @@ class PropsTest {
     }
 
     @Test
+    void testColor() {
+        assertEquals(new Color(100, 20, 250), p.getColor("my color"));
+        assertThrows(NullPointerException.class, () -> p.getColor("my int"));
+    }
+
+    @Test
     void testClear() {
         p.clear();
-        assertEquals(p.size(), 0);
+        assertEquals(0, p.size());
     }
 
     @Test
