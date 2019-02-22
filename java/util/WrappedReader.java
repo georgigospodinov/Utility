@@ -1,7 +1,8 @@
 package util;
 
+import java.nio.charset.StandardCharsets;
 import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.FileNotFoundException;
@@ -36,7 +37,10 @@ public class WrappedReader {
     public WrappedReader(final String filename, final Logger logger) {
         this.l = logger;
         try {
-            reader = new BufferedReader(new FileReader(filename));
+            FileInputStream fis = new FileInputStream(filename);
+            InputStreamReader isr;
+            isr = new InputStreamReader(fis, StandardCharsets.UTF_8);
+            reader = new BufferedReader(isr);
         } catch (FileNotFoundException e) {
             defaultCatch(e);
         }
@@ -63,7 +67,9 @@ public class WrappedReader {
      */
     public WrappedReader(final InputStream in, final Logger logger) {
         this.l = logger;
-        reader = new BufferedReader(new InputStreamReader(in));
+        InputStreamReader isr;
+        isr = new InputStreamReader(in, StandardCharsets.UTF_8);
+        reader = new BufferedReader(isr);
     }
 
     /**
