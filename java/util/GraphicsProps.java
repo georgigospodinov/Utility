@@ -4,14 +4,31 @@ import java.awt.Color;
 import java.awt.Point;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.io.FileNotFoundException;
 
 /**
  * Provides reading of ".props" files and
  * parsing of graphical configuration data.
  *
- * @version 1.0
+ * @version 1.1
  */
 public class GraphicsProps extends BasicProps {
+
+    /**
+     * Creates a {@link GraphicsProps} instance and
+     * loads the properties from the specified file.
+     *
+     * @param filename the name of the properties file to load
+     * @throws FileNotFoundException if the specified file is not found
+     */
+    public GraphicsProps(final String filename) throws FileNotFoundException {
+        super(filename);
+    }
+
+    /** Default constructor. A file should be loaded immediately. */
+    public GraphicsProps() {
+        super();
+    }
 
     /**
      * Gets the {@link Color} described by the given property.
