@@ -16,7 +16,7 @@ import static util.PrintFormatting.NEW_LINE;
  *
  * @version 2.3
  */
-public class Props {
+public class BasicProps {
 
     /** The name of the default properties file. */
     private static final String DEFAULT_PROPS_FILE = "default.props";
@@ -49,17 +49,17 @@ public class Props {
     private final HashMap<String, Float> floatProperties = new HashMap<>();
 
     /** Default constructor. A file should be loaded immediately. */
-    public Props() {
+    public BasicProps() {
     }
 
     /**
-     * Creates a {@link Props} instance and
+     * Creates a {@link BasicProps} instance and
      * loads the properties from the specified file.
      *
      * @param filename the name of the properties file to load
      * @throws FileNotFoundException if the specified file is not found
      */
-    public Props(final String filename) throws FileNotFoundException {
+    public BasicProps(final String filename) throws FileNotFoundException {
         load(filename);
     }
 
@@ -239,7 +239,7 @@ public class Props {
      * Loads the default properties file.
      *
      * @throws FileNotFoundException if the default properties file is not found
-     * @see Props#DEFAULT_PROPS_FILE
+     * @see BasicProps#DEFAULT_PROPS_FILE
      */
     public void load() throws FileNotFoundException {
         load(DEFAULT_PROPS_FILE);
@@ -269,7 +269,7 @@ public class Props {
     /**
      * Parses the specified line as a key-value property.
      * The line should contain two Strings separated by the
-     * {@link Props#KEY_VALUE_SEPARATOR}.
+     * {@link BasicProps#KEY_VALUE_SEPARATOR}.
      * If the separator appears multiple times in the line,
      * the string before the first separator will be used as key
      * and the string between the first and second separator - as value.

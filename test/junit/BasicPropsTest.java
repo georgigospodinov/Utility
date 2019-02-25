@@ -2,21 +2,21 @@ package junit;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import util.Props;
+import util.BasicProps;
 
 import java.awt.*;
 import java.io.FileNotFoundException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class PropsTest {
+class BasicPropsTest {
 
     private static final String FILE = "assets/test.props";
-    private static Props p;
+    private static BasicProps p;
 
     @BeforeEach
     void load() throws FileNotFoundException {
-        p = new Props();
+        p = new BasicProps();
         p.load(FILE);
     }
 
