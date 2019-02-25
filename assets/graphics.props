@@ -1,0 +1,13 @@
+my color r=100
+my color g=20
+my color b=250
+
+my point x=10
+my point y=30
+
+my dimension width=120
+my dimension height=105
+
+my font name=Dialog
+my font style=1
+my font size=12

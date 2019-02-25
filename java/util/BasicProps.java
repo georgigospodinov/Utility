@@ -1,6 +1,5 @@
 package util;
 
-import java.awt.Color;
 import java.io.File;
 import java.io.FileNotFoundException;
 
@@ -14,7 +13,7 @@ import static util.PrintFormatting.NEW_LINE;
 /**
  * Provides reading of ".props" files.
  *
- * @version 2.3
+ * @version 2.4
  */
 public class BasicProps {
 
@@ -215,24 +214,6 @@ public class BasicProps {
         }
 
         return stringProperties.get(property);
-    }
-
-    /**
-     * Gets the {@link Color} described by the given property.
-     * Specifically, looks for the integer properties that specify
-     * the {@link Color} in RGB,
-     * then creates and returns the appropriate object.
-     * E.G.: <code>getColor("my color")</code> will look for properties
-     * "my color r", "my color g", and "my color b".
-     *
-     * @param property the property to look for
-     * @return the {@link Color} described by that property
-     */
-    public Color getColor(final String property) {
-        int red = getInt(property + " r");
-        int green = getInt(property + " g");
-        int blue = getInt(property + " b");
-        return new Color(red, green, blue);
     }
 
     /**

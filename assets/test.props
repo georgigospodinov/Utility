@@ -4,7 +4,7 @@ CONSTANT_ONE=1
 CONSTANT_PI=3.14
 NEGATIVE=-3
 
-# Unsual constants
+# Unusual constants
 CONSTANT MULTI WORD STRING=Hello World!
 Hello in BG=Здравей!
 sample=1.0
@@ -15,6 +15,3 @@ my int=2
 my float=-0.3
 my double=1.797693E41
 my boolean=true
-my color r=100
-my color g=20
-my color b=250

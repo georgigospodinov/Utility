@@ -4,7 +4,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import util.BasicProps;
 
-import java.awt.*;
 import java.io.FileNotFoundException;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -30,7 +29,7 @@ class BasicPropsTest {
         assertEquals("Здравей!", p.getString("Hello in BG"));
         assertEquals(1.0, p.getDouble("sample"));
         assertEquals(1.0, p.getFloat("sample"));
-        assertEquals(15, p.size());
+        assertEquals(12, p.size());
     }
 
     @Test
@@ -71,12 +70,6 @@ class BasicPropsTest {
         assertTrue(p.isTrue("my boolean"));
         assertFalse(p.isTrue("CONSTANT_HELLO"));
         assertThrows(NullPointerException.class, () -> p.isTrue("my int"));
-    }
-
-    @Test
-    void testColor() {
-        assertEquals(new Color(100, 20, 250), p.getColor("my color"));
-        assertThrows(NullPointerException.class, () -> p.getColor("my int"));
     }
 
     @Test
