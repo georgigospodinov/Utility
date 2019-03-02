@@ -92,23 +92,13 @@ public class WrappedUnzipper {
     }
 
     /**
-     * Unzips the specified zip file.
+     * Tests the {@link WrappedUnzipper} by unzipping the whole util package.
      *
-     * @param filename the name of the zip file
+     * @param args arguments are ignored
      */
-    public void unzip(final String filename) {
-        instantiateZipReader(filename);
-        try {
-            ZipEntry zipEntry = zipIn.getNextEntry();
-            while (zipEntry != null) {
-                File file = createFileFor(zipEntry);
-                unzipFile(file);
-                zipIn.closeEntry();
-                zipEntry = zipIn.getNextEntry();
-            }
-        } catch (IOException e) {
-            defaultCatch(e);
-        }
+    public static void main(final String[] args) {
+        WrappedUnzipper unzipper = new WrappedUnzipper("assets/temp");
+        unzipper.unzip("assets/util.zip");
     }
 
     /**
@@ -174,6 +164,31 @@ public class WrappedUnzipper {
         }
         try {
             fos.close();
+        } catch (IOException e) {
+            defaultCatch(e);
+        }
+    }
+
+    /**
+     * Unzips the specified zip file.
+     *
+     * @param filename the name of the zip file
+     */
+    public void unzip(final String filename) {
+        instantiateZipReader(filename);
+        try {
+            ZipEntry zipEntry = zipIn.getNextEntry();
+            while (zipEntry != null) {
+                File file = createFileFor(zipEntry);
+                unzipFile(file);
+                zipIn.closeEntry();
+                zipEntry = zipIn.getNextEntry();
+            }
+        } catch (IOException e) {
+            defaultCatch(e);
+        }
+        try {
+            zipIn.close();
         } catch (IOException e) {
             defaultCatch(e);
         }
