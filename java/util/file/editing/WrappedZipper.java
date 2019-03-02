@@ -3,7 +3,9 @@ package util.file.editing;
 import util.log.Logger;
 
 import java.io.IOException;
+import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.zip.ZipOutputStream;
 import java.util.zip.ZipEntry;
@@ -13,7 +15,7 @@ import java.util.zip.ZipEntry;
  * Wraps {@link ZipOutputStream}.
  *
  * @author 150009974
- * @version 0.1
+ * @version 1.0
  */
 public class WrappedZipper {
 
@@ -24,7 +26,7 @@ public class WrappedZipper {
     private Logger l;
 
     /** The wrapped {@link ZipOutputStream} instance. */
-    private ZipOutputStream zout;
+    private ZipOutputStream zipOut;
 
     /**
      * Opens a {@link ZipOutputStream} to the specified file.
@@ -35,7 +37,7 @@ public class WrappedZipper {
     public WrappedZipper(final String zipFilename, final Logger logger) {
         this.l = logger;
         try {
-            zout = new ZipOutputStream(new FileOutputStream(zipFilename));
+            zipOut = new ZipOutputStream(new FileOutputStream(zipFilename));
         } catch (FileNotFoundException e) {
             defaultCatch(e);
         }
@@ -57,10 +59,117 @@ public class WrappedZipper {
     /** Closes the ZIP output stream as well as the stream being filtered. */
     public void close() {
         try {
-            zout.close();
+            zipOut.close();
         } catch (IOException e) {
             defaultCatch(e);
         }
+    }
+
+    /**
+     * Zips the specified file.
+     * If a regular file is specified, it becomes the only file in the zip.
+     * If a directory is specified, all files in it are recursively zipped.
+     * The specified directory is at the top of zip.
+     *
+     * @param filename th name of the file to zip
+     */
+    public void zip(final String filename) {
+        File file = new File(filename);
+        recursiveZip(file, file.getName());
+    }
+
+    /**
+     * Recursively zips the specified file.
+     *
+     * @param file the {@link File} object to zip
+     * @param name the name with which the file will appear in the zip
+     */
+    private void recursiveZip(final File file, final String name) {
+        String zipEntryName = putEntry(file, name);
+        if (file.isDirectory()) {
+            zipDirectory(file, zipEntryName);
+        } else {
+            zipRegular(file);
+        }
+    }
+
+    /**
+     * Puts a new {@link ZipEntry} for the specified file to the specified name.
+     * If the file is a regular file, the specified name is used as entry name.
+     * If the file is a directory, this method guarantees that the entry name
+     * appends "/" to the specified name if needed.
+     * Returns the entry name that was used.
+     *
+     * @param file the file to put an entry for
+     * @param name the name to use as the entry
+     * @return the entry name that was used
+     */
+    private String putEntry(final File file, final String name) {
+        String zipEntryName;
+        if (file.isDirectory() && !name.endsWith("/")) {
+            zipEntryName = name + "/";
+        } else {
+            zipEntryName = name;
+        }
+        try {
+            zipOut.putNextEntry(new ZipEntry(zipEntryName));
+        } catch (IOException e) {
+            defaultCatch(e);
+        }
+        return zipEntryName;
+    }
+
+    /**
+     * Zips the specified directory.
+     *
+     * @param directory    the directory to zip
+     * @param zipEntryName the entry name of the directory in the zip
+     */
+    private void zipDirectory(final File directory, final String zipEntryName) {
+        try {
+            zipOut.closeEntry();
+        } catch (IOException e) {
+            defaultCatch(e);
+        }
+        File[] children = directory.listFiles();
+        assert children != null;
+        for (File childFile : children) {
+            recursiveZip(childFile, zipEntryName + childFile.getName());
+        }
+    }
+
+    /**
+     * Reads and zips all bytes from the specified {@link File}.
+     *
+     * @param file the stream to read and zip
+     */
+    private void zipRegular(final File file) {
+        FileInputStream fis;
+        try {
+            fis = new FileInputStream(file);
+        } catch (FileNotFoundException e) {
+            defaultCatch(e);
+            return;
+        }
+        byte[] bytes = new byte[CHUNK_SIZE];
+        try {
+            for (int len = fis.read(bytes); len >= 0; len = fis.read(bytes)) {
+                zipOut.write(bytes, 0, len);
+            }
+        } catch (IOException e) {
+            defaultCatch(e);
+        }
+        try {
+            zipOut.closeEntry();
+        } catch (IOException e) {
+            defaultCatch(e);
+        }
+        try {
+            fis.close();
+        } catch (IOException e) {
+            defaultCatch(e);
+        }
+
     }
 
 }
