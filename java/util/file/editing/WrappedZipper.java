@@ -14,7 +14,6 @@ import java.util.zip.ZipEntry;
  * Provides zipping of files and folders without having to try-catch.
  * Wraps {@link ZipOutputStream}.
  *
- * @author 150009974
  * @version 1.0
  */
 public class WrappedZipper {
