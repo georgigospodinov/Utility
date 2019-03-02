@@ -44,6 +44,17 @@ public class WrappedZipper {
     }
 
     /**
+     * Opens a {@link ZipOutputStream} to the specified file.
+     * {@link IOException}s will be printed to standard error.
+     * This is equivalent to <code>WrappedZipper(zipFilename, null)</code>.
+     *
+     * @param zipFilename the name of the zip file
+     */
+    public WrappedZipper(final String zipFilename) {
+        this(zipFilename, null);
+    }
+
+    /**
      * The default behaviour for caught {@link Exception}s.
      *
      * @param e the caught {@link Exception}
@@ -170,6 +181,17 @@ public class WrappedZipper {
             defaultCatch(e);
         }
 
+    }
+
+    /**
+     * Tests the {@link WrappedZipper} by zipping the whole util package.
+     *
+     * @param args arguments are ignored
+     */
+    public static void main(final String[] args) {
+        WrappedZipper zipper = new WrappedZipper("assets/util.zip");
+        zipper.zip("java/util");
+        zipper.close();
     }
 
 }
