@@ -1,7 +1,8 @@
 package junit;
 
 import org.junit.jupiter.api.*;
-import util.*;
+import util.file.editing.*;
+import util.log.*;
 
 import java.io.*;
 

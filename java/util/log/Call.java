@@ -1,4 +1,6 @@
-package util;
+package util.log;
+
+import util.PrintFormatting;
 
 /**
  * This class provides methods to support tracing system execution.

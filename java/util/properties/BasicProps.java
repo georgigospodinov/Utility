@@ -1,4 +1,4 @@
-package util;
+package util.properties;
 
 import java.io.File;
 import java.io.FileNotFoundException;

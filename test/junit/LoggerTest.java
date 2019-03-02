@@ -3,8 +3,8 @@ package junit;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import util.Logger;
-import util.WrappedReader;
+import util.log.Logger;
+import util.file.editing.WrappedReader;
 
 import java.io.File;
 

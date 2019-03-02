@@ -1,4 +1,6 @@
-package util;
+package util.log;
+
+import util.file.editing.WrappedWriter;
 
 /**
  * Provides methods to log information to files.

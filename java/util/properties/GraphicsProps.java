@@ -1,4 +1,4 @@
-package util;
+package util.properties;
 
 import java.awt.Color;
 import java.awt.Point;

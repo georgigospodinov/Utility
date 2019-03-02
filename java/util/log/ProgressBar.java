@@ -1,4 +1,4 @@
-package util;
+package util.log;
 
 /**
  * Provides a progress bar that can be printed

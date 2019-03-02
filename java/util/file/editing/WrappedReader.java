@@ -1,4 +1,6 @@
-package util;
+package util.file.editing;
+
+import util.log.Logger;
 
 import java.nio.charset.StandardCharsets;
 import java.io.BufferedReader;
