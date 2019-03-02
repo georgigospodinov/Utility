@@ -24,7 +24,7 @@ public class WrappedWriter {
      * Opens a {@link BufferedWriter} to the given filename.
      *
      * @param filename filename of output file
-     * @param logger        {@link Logger} used for logging {@link IOException}s
+     * @param logger   {@link Logger} used for logging {@link IOException}s
      */
     public WrappedWriter(final String filename, final Logger logger) {
         this.l = logger;
