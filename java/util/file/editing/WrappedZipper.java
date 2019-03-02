@@ -191,6 +191,7 @@ public class WrappedZipper {
     public static void main(final String[] args) {
         WrappedZipper zipper = new WrappedZipper("assets/util.zip");
         zipper.zip("java/util");
+        zipper.zip("test/junit");
         zipper.close();
     }
 
