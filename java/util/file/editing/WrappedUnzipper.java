@@ -1,5 +1,6 @@
 package util.file.editing;
 
+import util.PrintFormatting;
 import util.log.Logger;
 
 import java.io.IOException;
@@ -7,6 +8,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.LinkedHashSet;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipEntry;
 
@@ -14,7 +16,7 @@ import java.util.zip.ZipEntry;
  * Provides unzipping of files and folders without having to try-catch.
  * Wraps {@link ZipInputStream}.
  *
- * @version 0.1
+ * @version 1.0
  */
 public class WrappedUnzipper {
 
@@ -98,7 +100,7 @@ public class WrappedUnzipper {
      */
     public static void main(final String[] args) {
         WrappedUnzipper unzipper = new WrappedUnzipper("assets/temp");
-        unzipper.unzip("assets/util.zip");
+        PrintFormatting.print(unzipper.unzip("assets/util.zip"));
     }
 
     /**
@@ -171,14 +173,19 @@ public class WrappedUnzipper {
 
     /**
      * Unzips the specified zip file.
+     * Returns the set of unzipped entries as defined by
+     * {@link ZipEntry#toString()}.
      *
      * @param filename the name of the zip file
+     * @return the set of all unzipped entries
      */
-    public void unzip(final String filename) {
+    public LinkedHashSet<String> unzip(final String filename) {
+        LinkedHashSet<String> unzippedEntries = new LinkedHashSet<>();
         instantiateZipReader(filename);
         try {
             ZipEntry zipEntry = zipIn.getNextEntry();
             while (zipEntry != null) {
+                unzippedEntries.add(zipEntry.toString());
                 File file = createFileFor(zipEntry);
                 unzipFile(file);
                 zipIn.closeEntry();
@@ -192,6 +199,7 @@ public class WrappedUnzipper {
         } catch (IOException e) {
             defaultCatch(e);
         }
+        return unzippedEntries;
     }
 
 }
