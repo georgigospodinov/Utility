@@ -91,4 +91,92 @@ public class WrappedUnzipper {
         }
     }
 
+    /**
+     * Unzips the specified zip file.
+     *
+     * @param filename the name of the zip file
+     */
+    public void unzip(final String filename) {
+        instantiateZipReader(filename);
+        try {
+            ZipEntry zipEntry = zipIn.getNextEntry();
+            while (zipEntry != null) {
+                File file = createFileFor(zipEntry);
+                unzipFile(file);
+                zipIn.closeEntry();
+                zipEntry = zipIn.getNextEntry();
+            }
+        } catch (IOException e) {
+            defaultCatch(e);
+        }
+    }
+
+    /**
+     * Instantiates the zip reader {@link WrappedUnzipper#zipIn}.
+     *
+     * @param filename the name of zip file to read
+     */
+    private void instantiateZipReader(final String filename) {
+        FileInputStream fis;
+        try {
+            fis = new FileInputStream(filename);
+        } catch (FileNotFoundException e) {
+            defaultCatch(e);
+            return;
+        }
+        zipIn = new ZipInputStream(fis);
+    }
+
+    /**
+     * Creates and returns the file corresponding to the specified zipEntry.
+     *
+     * @param zipEntry the {@link ZipEntry} to create a file for
+     * @return the created file
+     */
+    private File createFileFor(final ZipEntry zipEntry) {
+        File destFile = new File(destDir, zipEntry.getName());
+        if (zipEntry.isDirectory()) {
+            destFile.mkdir();
+        } else {
+            try {
+                destFile.createNewFile();
+            } catch (IOException e) {
+                defaultCatch(e);
+            }
+        }
+        return destFile;
+    }
+
+    /**
+     * Unzips the current {@link ZipEntry} into the specified file.
+     * if the specified file is not a regular file, it is ignored.
+     *
+     * @param file the file to write to
+     */
+    private void unzipFile(final File file) {
+        if (!file.isFile()) {
+            return;
+        }
+        FileOutputStream fos;
+        try {
+            fos = new FileOutputStream(file);
+        } catch (FileNotFoundException e) {
+            defaultCatch(e);
+            return;
+        }
+        byte[] buf = new byte[CHUNK_SIZE];
+        try {
+            for (int len = zipIn.read(buf); len >= 0; len = zipIn.read(buf)) {
+                fos.write(buf, 0, len);
+            }
+        } catch (IOException e) {
+            defaultCatch(e);
+        }
+        try {
+            fos.close();
+        } catch (IOException e) {
+            defaultCatch(e);
+        }
+    }
+
 }
